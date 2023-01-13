@@ -10,8 +10,14 @@
 # 7/24/2022
 # Personal Python Project
 #---------------------------------------------------------
+
+
 import sys
 import math
+import os 
+import random
+import pickle
+
 
 # We're going to need to set up some global parse items
 
@@ -95,6 +101,40 @@ player_One = player()
 player_Armor =  Armor()
 player_Weapon =  Weapon()
 
+#------------------------------------------------------------------------------
+#
+# This is where we will save the game's current state and this will allow the
+# player to pick up where they left off.
+#
+#-----------------------------------------------------------------------------
+def save():
+    global player_One
+    global player_Armor
+    global player_Weapon
+    global verbs
+
+
+    print ('')
+    print ('Enter the filename: ', end = ' ')
+    f = input()  
+
+    save_file = open(f, 'wb')
+
+    
+    try:
+        pickle.dump(player_One, save_file)
+        pickle.dump (player_Armor, save_file)
+        pickle.dump(player_Weapon, save_file)
+    s   ave_file.close()
+    except:
+        print(error)
+
+  
+    print ('File saved')
+
+
+
+    
 #-----------------------------------------------------------------------------
 # This function will display the father's journal, which will explain the
 # basic premise of the game. It will also give some basic commands, if I 
@@ -308,7 +348,8 @@ def display_room (gd_room, gd_inGame, ):
 #
 #----------------------------------------------------------------------------------
 def check_syntax (fcommand_list):
-    # Let the game know it's using global variables
+    # Let the game know it's using global variablesif (len(fcommand_list) >1) and (fcommand_list[command] == 'equip') and not(fcommand_list[command+1] in objects)
+
     global verbs
     global directions
     global prepositions
@@ -336,7 +377,7 @@ def check_syntax (fcommand_list):
 def parse_general(fcommand_list):
     
 
-    print ('Parsing general')
+
 
     z = 0
     try:
@@ -363,7 +404,7 @@ def parse_general(fcommand_list):
             #implement loading code here
             return
         if (fcommand_list[0] == 'save'):
-            #implement saving code here
+            save()
             return
 
         return
@@ -464,7 +505,7 @@ def parse_room2 (fcommand_list):
         if (fcommand_list[z] == 'e') or (fcommand_list[z] == 'E') or (fcommand_list[z] == 'east'):
                 room = 3
         if  (fcommand_list[z] == 's') or (command_list[z] == 'S') or (fcommand_list[z] == 'south') :
-                room = 4       
+                room = 4
         
         
         # Now call the code/functions for when the player gets them
@@ -524,19 +565,17 @@ def parse_room3 (fcommand_list):
     
     if (len(fcommand_list) == 2) and ((fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor')):
         print ('You put the cloth suit on.')
-        player_Armor.type = cloth
+        player_Armor.type = 'cloth'
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'w') or (fcommand_list[command == 'W']) or (fcommand_list[command] == 'west'):
         room = 2
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'n') or (fcommand_list[command] == 'N') or (fcommand_list[command] == 'north'):
         room = 6
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 's') or (fcommand_list[command] == 'S') or (fcommand_list[command] == 'south'):
         print ('You cannot go that direction.')
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'e') or (fcommand_list[command] == 'E') or (fcommand_list[command] == 'E'):
-        roonm = 5
+    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'e') or (fcommand_list[command] == 'E') or (fcommand_list[command] == 'east'):
+        room = 5
     if (len(fcommand_list) > 1) and (fcommand_list[command] == 'read'): 
         print ('There is nothing here to read.')
-    if (len(fcommand_list) >1) and (fcommand_list[command] == 'equip') and not(fcommand[command+1] in objects):
-        print ('Equip what?')
     if (len(fcommand_list) == 3) and (fcommand_list[command] == 'look') and (fcommand[command+1] in prepositions) and (fcommand_list[command+2] in objects):
         print ('There is nothing here of interest')
    
@@ -585,13 +624,11 @@ def parse_room4 (fcommand_list):
 def parse_room5 (fcommand_list):
     
     global room
-
-    command = 0
    
 
     
     if (len(fcommand_list) == 3):
-        if (fcommand_list[1] == 'search') and (fcommand_list[2] == 'under') and (fcommand_list[3] == 'toilet'):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'under') and (fcommand_list[2] == 'toilet'):
             print ('If you really want to search behind the toilet I won\'t stop you, but I personally wouldn\'t.')
             print ('After carefully avoding some of the nastier things that dropped behind the the commode,')
             print ('you find a hastily scrawled note in your father\'s handwriting.')
@@ -602,8 +639,8 @@ def parse_room5 (fcommand_list):
             print ('keep my plans secret')
         else:
             print ('I didn\'t understand that.')    
-    elif (len(fcommand_list == 2):
-        if (fcommand_list[1] == 'search') and (fcommand_list[2] == 'toilet'):
+    elif (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'toilet'):
             print ('Ewww.')
         else:
             print ('You can\'t do that here.')
@@ -611,7 +648,7 @@ def parse_room5 (fcommand_list):
         if (len(fcommand_list) >= 4):
             print ('The longest acceptable command is three words')
         else:
-            if (len(fcommand_list) == 1) (fcommand_list[1] == 'e') or (fcommand_list[1] == 'E') or (fcommand_list[1] == 'east'):
+            if (len(fcommand_list) == 1) or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
                 room = 3
             else:
                 print ('You can\'t do that here.')
@@ -722,7 +759,7 @@ def game_start (sg_godmode):
                 parse_room3 (command_list)
             elif room == 4:
                 parse_room4 (command_list)
-            elif room == 5:
+            elif room == 5: 
                 parse_room5 (command_list)
             elif room == 6:
                 parse_room6 (command_list)
