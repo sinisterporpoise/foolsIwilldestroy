@@ -14,7 +14,7 @@
 
 import sys
 import math
-import os 
+import os
 import random
 import pickle
 
@@ -39,7 +39,7 @@ objects = ['journal, knife, gun, sword', 'toilet', 'rat']
 room = 1
 #----------------------------------------------------------------------------
 #
-# We're going to start by defining 3 different classes.  Weapon, vehicle, 
+# We're going to start by defining 3 different classes.  Weapon, vehicle,
 # player.
 #
 # Weapon will have methods that determine attack damage.
@@ -47,11 +47,13 @@ room = 1
 # Player will define characteristics unique to the player.
 #
 #----------------------------------------------------------------------------
+
+
 class Weapon:
 
-    def __init__ (self):
+    def __init__ (self, type = None, damage = 0, elemental_type = None, elemental_percantage = 0):
         self.type = None
-        self.damage = 5
+        self.damage = 0
         self.elemental_type = None
         self.elemental_percentage = 0
 
@@ -78,7 +80,7 @@ class Weapon:
 
 class Armor:
 
-     def __init__ (self):
+     def __init__ (self, type = None, value = 0, resistance = 0):
          self.type = None
          self.value = 0
          self.resistance = 0
@@ -93,7 +95,8 @@ class player:
          self.equip = None
          self.worn = None
          self.damage = 3
-         self.ratbeatn = False
+         self.ratbeaten = False
+         self.room = 1
 
 
 
@@ -101,6 +104,33 @@ player_One = player()
 player_Armor =  Armor()
 player_Weapon =  Weapon()
 
+#------------------------------------------------------------------------------
+#
+# The ever popular, ever-exciting, and ever cliched-battle with the rat.
+#
+#------------------------------------------------------------------------------
+def rat_battle (god_mode:);
+    rat_hp = 10
+    rat_damage = math.randomInt(4)+1
+    rat_armor = 1
+
+    global player_One
+    global player_Armor
+    global player_Weapon
+
+    if god_mode == True:
+        print ('The rat dies in the presence of an obvious god.')
+        ratbeaten = True
+    else:
+        while (rat_hp > 0) or (player_One.health > 0):
+            hit_chance = randomInt(100)
+            initiative = randomInt(2)
+            if randomInt = 0:
+                print ('You win initiative.')
+
+            if hit_ttchance <= 75:
+                rat_Damage = random(3) +
+                print (f'You swing your knife at the rat for {damage}')
 #------------------------------------------------------------------------------
 #
 # This is where we will save the game's current state and this will allow the
@@ -116,28 +146,64 @@ def save():
 
     print ('')
     print ('Enter the filename: ', end = ' ')
-    f = input()  
+    f = input()
 
-    save_file = open(f, 'wb')
+    if os.path.exists(f):
+        print('File exists. Do you wish to overwrite (Y/N): ', end = '')
+        overwrite = input()
+        print (overwrite.upper())
+        if overwrite.upper() != 'Y':
+            return
 
-    
+
     try:
-        pickle.dump(player_One, save_file)
-        pickle.dump (player_Armor, save_file)
-        pickle.dump(player_Weapon, save_file)
-    s   ave_file.close()
-    except:
-        print(error)
-
-  
-    print ('File saved')
+        with open(f, "wb") as save_file:
+            pickle.dump((player_One, player_Armor, player_Weapon), save_file)
 
 
+    except Exception as e:
+        print (e)
+        print('Gavme could not be saved.')
 
-    
+
+    return
+
+#------------------------------------------------------------------------------
+#
+# This function will load the game from a previous save state, and move the
+# player to the room where they last saved. it will also check load the
+# values of the player's armor and weapon.
+#
 #-----------------------------------------------------------------------------
+def load():
+
+    global player_One
+    global player_Armor
+    global player_Weapon
+    global room
+
+    print ('What saved game file would you like to load?', end = '')
+    f = input ()
+
+    if os.path.exists(f):
+        try:
+            with open(f, 'rb') as load_file:
+               player_One = pickle.load(load_file)
+               player_Armor = pickle.load(load_file)
+               player_Weapon = pickle.load(load_file)
+
+        except Exception as e:
+                print (e)
+
+
+    else:
+        print ('File does not exist.')
+
+    room = player_One.room
+    return
+#-----------------------------------------------------------------------------s
 # This function will display the father's journal, which will explain the
-# basic premise of the game. It will also give some basic commands, if I 
+# basic premise of the game. It will also give some basic commands, if I
 # remember to put them in.
 #-----------------------------------------------------------------------------
 def display_journal ():
@@ -189,7 +255,7 @@ def display_journal ():
 #
 # For this function, we are displaying the player's personal journal, where
 # she explains how she feels about her father and how she knows that she must
-# stop him in some way.  I really need to put some kind of puzzle in this 
+# stop him in some way.  I really need to put some kind of puzzle in this
 # game, but I can't figure out what it should be yet.
 #
 #-----------------------------------------------------------------------------
@@ -212,12 +278,12 @@ def display_personal_journal ():
     print ('I don\'t remember exactly. It was something that sounded like jeans')
     print ('anyway. I don\'t think the site said jack about clothing.')
     print ('')
-    j = input()
+    j = input('Press enter to continue...')
     print ('But right there, like in the middle of the page, was my dad\'s name')
     print ('The website said he like saved lives by making sure farmers')
     print ('made more crops or something.')
     print ('')
-    j = input ()
+    j = input ('Press enter to continue')
     print ("Then all other peeps in the class started dissing me 'cuz my dad\'s")
     print ('an egghead, and a I nearly died of embarrassment.  But some of them')
     print ('said my dad would like destroy the world or something and they')
@@ -225,7 +291,7 @@ def display_personal_journal ():
     print ('Like I donn\'t remember what they said, \'cuz I didn\'t go where')
     print ('they wanted me to.')
     print ('')
-    j = input()
+    j = input('Press enter to continue')
     print ('Anwyay, I go home and I see my dad fiddling around with something in his')
     print ('lab, which he put in the shed for some reason. Even weirder, it\'s like')
     print ('in our front yard, but he tells me not to come in or I might die.')
@@ -234,7 +300,7 @@ def display_personal_journal ():
     print ('out.')
     print('--------------------------------------------------------------------')
     print ('')
-    j = input()
+    j = input('Press Enter to return to game')
 
     print ('As you put the journal back down, you realize that this entry was')
     print ('written several days ago and you have not seen your father since.')
@@ -246,17 +312,18 @@ def display_personal_journal ():
 # This function will simply print out a visiaul display of each rooom.
 #
 #------------------------------------------------------------------------------
-def display_room (gd_room, gd_inGame, ):
+def display_room (gd_room, gd_inGame):
 
     global player_One
     # Your father's lab
+    player_One.room = gd_room
 
     if gd_room == 1:
         print ('1. This is your father\'s genetics engineering lab. In the ')
         print ('corner of the room there is a living pet dinosaur that he')
         print ('made you. You also find an open diary on his desk.')
         print ('')
-        print ('You see your father''s dairy on the table.')
+        print ('You see your father''s journal on the table.')
         print ('')
         print ('There is an exit to the south')
 
@@ -283,7 +350,7 @@ def display_room (gd_room, gd_inGame, ):
                 print ('')
                 print ('You see a suit of  cloth from your father\'s days')
                 print ('in the Society for Creative Anarchism.')
-            
+
 
             print ('')
             print ('There are exits to the west, east and to the North.')
@@ -291,15 +358,15 @@ def display_room (gd_room, gd_inGame, ):
 
     # The player's bedroom
     if gd_room == 4:
-            print ('4. This is your bedroom. The wall is decorted with a few')
+            print ('4. This is your bedroom. The wall is decorated with a few')
             print ('posters of you favorite band. There is a desk with a computer')
             print ('on the wall opposite your bed. There are a few clothes on the floor')
             print ('and the room is in a state of disarray that only the most diligent')
             print ('teenagers can achieve by neglecting to clean their room on a regular')
             print ('basis.')
             print ('')
-            
-            
+
+
             if player_One.equip == None:
                 print ('Your journal is open on your bed, and you think you left your pocket knife in')
                 print ('a pile of clothes')
@@ -318,7 +385,7 @@ def display_room (gd_room, gd_inGame, ):
         print ('The is an exit to the east')
 
     if gd_room == 6:   # Dining Room
-        print ('This is the dining room. The table is cluttered with dishes, and it looks like')
+        print ('This ias the dining room. The table is cluttered with dishes, and it looks like')
         print ('there are the remains of some hastily eaten meal here. Although the kitchen sink')
         print ('is empty. You do not have time to tidy up the remains of your father\'s dinner.')
         print ('')
@@ -332,7 +399,7 @@ def display_room (gd_room, gd_inGame, ):
         print ('and drawn by your father.')
         print ('')
         print ('There is a closed door.')
-        if player_One.ratbeatn == False:
+        if player_One.ratbeaten == False:
             print ('You see a large rate blocking the exit.  It will need to be removed. It does not')
             print ('look friendly. It looks like its gene code has been altered in some way.')
         else:
@@ -341,10 +408,10 @@ def display_room (gd_room, gd_inGame, ):
     return
 
 #----------------------------------------------------------------------------------
-# 
+#
 # Ths function will check to see if the user's commands work with the game's own
 # syntax which I know is a context-ftree grammar. The nice thing about context-
-# free grammars it that they are easy to implement.
+# free grammars it that thewhat is the m&m shell made of?what is the m&m shell made of?y are easy to implement.
 #
 #----------------------------------------------------------------------------------
 def check_syntax (fcommand_list):
@@ -357,7 +424,7 @@ def check_syntax (fcommand_list):
 
     command = 0
     try:
-        
+
         if (len(fommand_list) > 2) and not (fcommand_list[command+1] in prepositions) and not(fcommand_list[command+2] in objects):
             print (f'The word commands must take the form of verbs: ')
             return False
@@ -371,12 +438,10 @@ def check_syntax (fcommand_list):
     except:
         return True
 #----------------------------------------------------------------------------------
-# This command just parses general_commands that are not tied to any room, such 
+# This command just parses general_commands that are not tied to any room, such
 # as save, load, quit, or exit.
 #----------------------------------------------------------------------------------
 def parse_general(fcommand_list):
-    
-
 
 
     z = 0
@@ -389,20 +454,22 @@ def parse_general(fcommand_list):
             try:
                 print ('I hope you remembered to save.')
                 exit ()
-            
-            
+
+
             except IOError:
                 print ('This is an I/O Error that you likely should not be getting.')
                 exit()
-            
-            
+
+
             finally:
                 exit ()
 
 
         if (fcommand_list[0] == 'load'):
-            #implement loading code here
+            load()
             return
+
+
         if (fcommand_list[0] == 'save'):
             save()
             return
@@ -421,69 +488,73 @@ def parse_general(fcommand_list):
 #
 #----------------------------------------------------------------------------------
 def parse_room1 (fcommand_list):
-    
+
     global room
     z = 0
-
+    global player_one
+    player_One.room = room
     try:
 
-           
+
         # the player forgot to tell the game what to read
         if (fcommand_list[z] == 'read') and (fcommand_list[z+1] == 'journal'):
             display_journal();
-        
-        
+
+
         if (fcommand_list[z] == 'read' ) and (fcommand_list[z+1] != 'journal'):
             print ('Read what?')
-        
-        
+
+
         if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south') :
                 room =  2
-        
-        else:
-            print ('You can\'t do that here')
-
 
     except:
-        
-        
+
+
         # For now, we are assuming there is only one item.
         # We will add code to ensure this is the case later.
-        
-        
+
+
         try:
             if (fcommand_list[z] == 'read') and (fcommand_list[z+1] == 'journal'):
                 display_journal ()
-            
+
             if (fcommand_list[z] == 'read'):
                 print ('Read what?')
 
 
             if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south'):
                 room = 2
-    
-        
-        
+
+
+
         except:
             print ('you can\'t do that here')
 
-            
+
 
 
     return
 
+#-----------------------------------------------------------------------------
+# This is where we'll control the first encounter in the game, the battle
+# with the rat.
+#
 
 #-----------------------------------------------------------------------------
 #
 # Room 2 is a hallway in you father's house. It has exits to the west,
-# an exit to the north to  your father's lab, and anohter exit to the south 
+# an exit to the north to  your father's lab, and aanohter exit to the south
 # to  your bedroom. The bedrrom is room 4, the hallway is to room 3.
 #
 #-------------------------------------------------------------------------------
 def parse_room2 (fcommand_list):
     global room
-
+    global player_One
+    player_One.room = room
     z = 0
+
+
     try:
 
         # So, what happens if the player forgets to add the wright word?
@@ -498,7 +569,7 @@ def parse_room2 (fcommand_list):
             display_journal();
         if  (fcommand_list[z] == 'read' ) and (fcommand_list[z+1] != 'journal'):
             print ('Read what?')
-        
+
         if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') \
                 or (fcommand_list[z]== 'south'):
                 room =  1
@@ -506,13 +577,13 @@ def parse_room2 (fcommand_list):
                 room = 3
         if  (fcommand_list[z] == 's') or (command_list[z] == 'S') or (fcommand_list[z] == 'south') :
                 room = 4
-        
-        
+
+
         # Now call the code/functions for when the player gets them
-        # parse commands correct
+        # parse commands correctfa
         if (fcommand_list[z] == 'equip') and (fcommand_list[z+1] == 'sword') or (fcommand_list[z+1] == 'knife') or (fcommand_list[z+1] == 'gun'):
             print ('')
-                         
+
 
         if (fcommand_list[z] == 'equip'):
                 print ('Equip what?')
@@ -525,8 +596,6 @@ def parse_room2 (fcommand_list):
                 room = 3
         if  (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south'):
                 room = 4
-        else:
-            print ('You can\'t do that here')
 
     except:
         # For now, we are assuming there is only one item.
@@ -542,7 +611,7 @@ def parse_room2 (fcommand_list):
                 room = 3
             if  (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list == 'south'):
                 room = 4
- 
+
         except:
             print ('You can\'t do that here.')
 
@@ -557,12 +626,13 @@ def parse_room2 (fcommand_list):
 # north goes to a kitchen.
 #-----------------------------------------------------------------------------
 def parse_room3 (fcommand_list):
-    
+
     global player_One
     global room
+    player_One.room = room
     command = 0
-    
-    
+
+
     if (len(fcommand_list) == 2) and ((fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor')):
         print ('You put the cloth suit on.')
         player_Armor.type = 'cloth'
@@ -574,12 +644,12 @@ def parse_room3 (fcommand_list):
         print ('You cannot go that direction.')
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'e') or (fcommand_list[command] == 'E') or (fcommand_list[command] == 'east'):
         room = 5
-    if (len(fcommand_list) > 1) and (fcommand_list[command] == 'read'): 
+    if (len(fcommand_list) > 1) and (fcommand_list[command] == 'read'):
         print ('There is nothing here to read.')
     if (len(fcommand_list) == 3) and (fcommand_list[command] == 'look') and (fcommand[command+1] in prepositions) and (fcommand_list[command+2] in objects):
         print ('There is nothing here of interest')
-   
-  
+
+
     return
 
 
@@ -590,29 +660,34 @@ def parse_room3 (fcommand_list):
 def parse_room4 (fcommand_list):
     global room
     global player_One
+    player_One.room = room
     command = 0
 
     # We will check to see if she has a weapon equipped first
     if player_One.equip == None:
 
-        try:
             if (len(fcommand_list) == 2) and (fcommand_list[command] == "equip") and (fcommand_list[command+1] == "knife"):
                 print ('You wield your trusty pocket knife.')
-                player_one.Weapon = 'knife'
+                player_One.equip = 'knife'
             if (len(fcommand_list) == 2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] == 'journal'):
                 display_personal_journal ()
             if (len(fcommand_list) ==  2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] != 'journal'):
                 print ('You can\'t read that.')
             if (len(fcommand_list) == 1) and (fcommand_list[command] ==  'N') or (fcommand_list[command] == 'n') or (fcommand_list[command] == 'north'):
                 room = 2
-            else:   
+            else:
                 pass
-        
-        
-        except: 
-            print ('You can\'t do that here.')
-        
-    
+    elif player_One.equp != None:
+            if (len(fcommand_list) == 2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] == 'journal'):
+                display_personal_journal ()
+            if (len(fcommand_list) ==  2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] != 'journal'):
+                print ('You can\'t read that.')
+            if (len(fcommand_list) == 1) and (fcommand_list[command] ==  'N') or (fcommand_list[command] == 'n') or (fcommand_list[command] == 'north'):
+                room = 2
+    else:
+                print ('You can\'t do that here.')
+
+
     return
 
 
@@ -622,11 +697,14 @@ def parse_room4 (fcommand_list):
 # bathrooms.
 #----------------------------------------------------------------------------
 def parse_room5 (fcommand_list):
-    
-    global room
-   
 
-    
+    global room
+    global player_one
+
+    player_One.room = room
+
+
+
     if (len(fcommand_list) == 3):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'under') and (fcommand_list[2] == 'toilet'):
             print ('If you really want to search behind the toilet I won\'t stop you, but I personally wouldn\'t.')
@@ -637,8 +715,9 @@ def parse_room5 (fcommand_list):
             print ('Daughter and I inocculated and should be safe even if we were bit. It took a series of shots')
             print ('and I hated convincing her that she injured herself in her sleep, but it was necessary to ')
             print ('keep my plans secret')
+            room = 5
         else:
-            print ('I didn\'t understand that.')    
+            print ('I didn\'t understand that.')
     elif (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'toilet'):
             print ('Ewww.')
@@ -652,7 +731,7 @@ def parse_room5 (fcommand_list):
                 room = 3
             else:
                 print ('You can\'t do that here.')
-              
+
 
 
 #----------------------------------------------------------------------------
@@ -661,8 +740,22 @@ def parse_room5 (fcommand_list):
 # goes to the kitchen. South goes to the living room.
 #----------------------------------------------------------------------------
 def parse_room6 (fcommand_list):
+    global player_One
+    global player_Armor
+    global player_Weapon
 
+    global room
 
+    player_One.room = room
+
+    if (len(fcommand_list) >=1):
+        if (fcommand_list[0] == 'N') or (fcommand_list[0] == 'n') or (fcommand_list[0].upper == 'NORTH'):
+            room = 7
+            return
+        if (fcommand_list[0].upper == 'S') or (fcommand_list.upper == 'SOUTH'):
+            room = 4
+        else:
+            print ('You can\'t do that here')
     return
 
 
@@ -674,8 +767,38 @@ def parse_room6 (fcommand_list):
 #
 #----------------------------------------------------------------------------
 def parse_room7 (fcommand_list):
+    global ratbeaten
+    global player_One
+    global player_Armor
+    global player_Weapon
+
+    player_One.room = 7
+
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no more than three words.')
+    elif (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    elif (len((fcommand_list) == 2)):
 
 
+        if (fcommand_list[0].upper == 'OPEN') and (fcommand_list[1].upper == 'DOOR'):
+            if player_One.ratbeaten == False:
+                print ('There is a rat blocking the door.')
+            else:
+                room = 8
+                return
+
+
+        if (fcommand_lis[0].upper == 'ATTACK') and (fcommand_list[1].upper == 'RAT'):
+            rat_battle (godmode)
+
+
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0].upper == 'S') or (fcommand_list[1].upper == 'SOUTH'):
+            room = 6
+
+    else:
+        print ('You can\'t do that here')
     return
 
 
@@ -719,11 +842,16 @@ def game_start (sg_godmode):
     # Okay, we're going to set this to True to start, eand
     # when the player enters the exit or quit commands,
     # it will e set to false.
+
+
     inGame = True
     global room
-
+    global player_One
+    global player_Armor
+    global player_Weapon
 
     while inGame:
+        player_One.room = room
         display_room (room, inGame)
 
         print ("")
@@ -733,13 +861,13 @@ def game_start (sg_godmode):
 
         try:
             command_list = command.split(' ')
-       
-       
+
+
         except:
             print('I hope you remembered to save.')
             exit()
 
-        
+
         print (room)
         print ('Debugging', command_list)
 
@@ -751,20 +879,27 @@ def game_start (sg_godmode):
 
         if (check_syntax (command_list) == True):
             parse_general(command_list)
+
+
+            player_One.room = room
+
+
             if room == 1:
                 parse_room1 (command_list)
             elif room == 2:
+                player_One.room = 2
                 parse_room2 (command_list)
             elif room == 3:
                 parse_room3 (command_list)
             elif room == 4:
                 parse_room4 (command_list)
-            elif room == 5: 
+            elif room == 5:
                 parse_room5 (command_list)
             elif room == 6:
+
                 parse_room6 (command_list)
             elif room == 7:
-                parse_room7 (command_list)
+                parse_room7 (command_list, sg_godmode)
             elif room == 8:
                 parse_room8 (command_list)
             elif room == 9:
@@ -829,10 +964,10 @@ def parse_args (fargs):
             godmode = False
 
 
-    
+
     game_start(godmode)
-    
-    
+
+
     return
 #===========================================================================
 #
@@ -843,6 +978,9 @@ def main ():
     args = sys.argv[1:]             # Get all command line arguments
     parse_args(args)
 
+
+knife = Weapon('slashing', 3, None, 0)
+sord =  Weapon ('slashing', 6, None, 0)
 if __name__ == "__main__":
     player_One = player()
     player_Armor =  Armor()
