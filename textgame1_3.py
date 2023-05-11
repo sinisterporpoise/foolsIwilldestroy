@@ -51,29 +51,32 @@ room = 1
 
 class Weapon:
 
-    def __init__ (self, type = None, damage = 0, elemental_type = None, elemental_percantage = 0):
-        self.type = None
-        self.damage = 0
-        self.elemental_type = None
-        self.elemental_percentage = 0
+    def __init__ (self, type = None, damage = 0, elemental_type = None, elemental_percentage = 0):
+        self.type = type
+        self.damage = damage
+        self.elemental_type = elemental_type
+        self.elemental_percentage = elemental_percentage
 
 
     def swing (self):
         # We're going to de
-        if self.elemental_type == fire:
-            return math.random(self.damage * (1 + self.elemental_percentage))
+        if self.elemental_type == 'fire':
+            return random.randint(0,self.damage * (1 + self.elemental_percentage)) +1
 
 
-        if self.elemental_type == water:
-            return math.random(self.damage * (1+ self.elemental_percentage))
+        if self.elemental_type == 'water':
+            return random.randint(0, self.damage * (1+ self.elemental_percentage)) + 1
 
 
-        if self.elemental_type == air:
-            return math.random(selff.damage * (1+ self.lemantal_percentage))
+        if self.elemental_type == 'air':
+            return random.randint(0,selff.damage * (1+ self.lemantal_percentage)) +1
 
 
-        if self.elemental_type == earth:
-            return math.random(self.damage * (1+ self.elemental_percentage))
+        if self.elemental_type == 'earth':
+            return random.randint(0, self.damage * (1+ self.elemental_percentage)) +1
+
+        if self.elemental_type == None:
+            return random.randint(0, self.damage) + 1
 
 
 #---------------------------------------------------------------------------------
@@ -104,33 +107,108 @@ player_One = player()
 player_Armor =  Armor()
 player_Weapon =  Weapon()
 
+#--------------------------------------------------------------------------
+#
+# This is a function that might be called often enough to have its down
+# separate function.
+#
+#--------------------------------------------------------------------------
+def end_scren ():
+        print ('You shuffle off your mortal coil.  Weeks later, the')
+        print ('the city is overrun by crazed invidiauls attacking the')
+        print ('few remaining people not affected by the virus.')
+        print ('')
+        print ('Game Over.')
+        exit()
 #------------------------------------------------------------------------------
 #
 # The ever popular, ever-exciting, and ever cliched-battle with the rat.
 #
 #------------------------------------------------------------------------------
-def rat_battle (god_mode:);
+def rat_battle (god_mode):
     rat_hp = 10
-    rat_damage = math.randomInt(4)+1
+    rat_damage = random.randint(0,2)+1
     rat_armor = 1
 
+    global knife
+    global sword
     global player_One
     global player_Armor
     global player_Weapon
 
+    # Note, much of this code is repetitive and should be broken
+    # up into smaller functions to reduce the number of lines.
+
+    # Also, why am I not creating a module where all the game's monsters
+    # and rooms are defined as objects?
+
+    player_damage = 0
     if god_mode == True:
         print ('The rat dies in the presence of an obvious god.')
-        ratbeaten = True
+        player_One.ratbeaten = True
+        return
     else:
-        while (rat_hp > 0) or (player_One.health > 0):
-            hit_chance = randomInt(100)
-            initiative = randomInt(2)
-            if randomInt = 0:
+        while (rat_hp > 0) or (player_One.hitpoints > 0):
+            input()
+
+            print (f'Rat HP: {rat_hp}, player_One.hitpoinse {player_One.hitpoints} ')
+            hit_chance = random.randint(0,100)
+            initiative = random.randint(0,2)
+            if (initiative == 0):
                 print ('You win initiative.')
 
-            if hit_ttchance <= 75:
-                rat_Damage = random(3) +
-                print (f'You swing your knife at the rat for {damage}')
+                if hit_chance <= 75:
+
+                    if player_One.equip == None:
+                        player_damage = random.randint(0,3)+1
+                        rat_hp -= player_damage
+                    else:
+                        player_damage = knife.swing()
+                        print (f'You swing your {player_One.equip} at the rat for {player_damage}')
+                        rat_hp -= player_damage
+                        hit_chance = random.randint(0,60)
+                        if (hit_chance <= 60):
+                            rat_damage = random.randint(0,2)+ - player_Armor.value
+                            print (f'The rat hits you for {rat_damage} points')
+                            player_One.hitpoints -= rat_damage
+                        else:
+                            print ('The rat misses you.')
+                else:
+                            print ('You miss the rat')
+
+            # The Rat goes first
+            else:
+                    hit_chance = random.randint(0,100)
+
+                    if (hit_chance <= 60):
+                        print ('The rat wins initiative')
+                        rat_damage = random.randint(0,2)+1 - player_Armor.value
+                        print (f'The rat hits you for {rat_damage} points')
+                        player_One.hitpoints -= rat_damage
+                    else:
+                        print ('The rat misses you.')
+
+                    hit_chance = random.randint(0,100)
+                    if (hit_chance <= 75):
+                        if player_One.equip == None:
+                            random.randint(0,player_One.damage) + 1
+                        else:
+                            player_damage = knife.swing()
+
+                        print (f'You hit the rat with your {player_One.equip} for {player_damage}')
+                        rat_hp -= player_damage
+                    else:
+                        print ('You miss the rat.')
+
+            if player_One.hitpoints <= 0:
+                end_screen()
+            elif rat_hp  <= 0:
+                print ('The rat no longer bars your way.')
+                player_One.ratbeaten = True
+                return
+
+
+
 #------------------------------------------------------------------------------
 #
 # This is where we will save the game's current state and this will allow the
@@ -158,7 +236,9 @@ def save():
 
     try:
         with open(f, "wb") as save_file:
-            pickle.dump((player_One, player_Armor, player_Weapon), save_file)
+            pickle.dump(player_One, save_file)
+            pickle.dump(player_Armor, save_file)
+            pickle.dump(player_Armor, save_file)
 
 
     except Exception as e:
@@ -343,7 +423,7 @@ def display_room (gd_room, gd_inGame):
             print ('3. This is a fairly standard living room. There is a chair')
             print ('along the southern wall, a television mounted on the northern')
             print ('wall, and a sofa beneath a window on the western wall, and a')
-            print ('bathroom to the ast')
+            print ('bathroom to the east')
 
             # Does the player have armor equipped? If not, show this line.
             if player_One.worn == None:
@@ -382,7 +462,7 @@ def display_room (gd_room, gd_inGame):
         print ('repeated insistences that you do not. It looks like there is something behind')
         print ('the toilet.')
         print ('')
-        print ('The is an exit to the east')
+        print ('The is an exit to the west')
 
     if gd_room == 6:   # Dining Room
         print ('This ias the dining room. The table is cluttered with dishes, and it looks like')
@@ -398,12 +478,12 @@ def display_room (gd_room, gd_inGame):
         print ('preparation. The pages contain many scribbles and crossed out diagrams written  ')
         print ('and drawn by your father.')
         print ('')
-        print ('There is a closed door.')
+        print ('There is a closed door to the north and an exit to the south.')
         if player_One.ratbeaten == False:
             print ('You see a large rate blocking the exit.  It will need to be removed. It does not')
             print ('look friendly. It looks like its gene code has been altered in some way.')
         else:
-            print ('There is nothing blocking your way.')
+            print ('There is nothing blocking your way to the north and an exit to the south.')
 
     return
 
@@ -490,47 +570,24 @@ def parse_general(fcommand_list):
 def parse_room1 (fcommand_list):
 
     global room
-    z = 0
     global player_one
+    z = 0
+    room = 1
     player_One.room = room
-    try:
-
-
-        # the player forgot to tell the game what to read
-        if (fcommand_list[z] == 'read') and (fcommand_list[z+1] == 'journal'):
-            display_journal();
-
-
-        if (fcommand_list[z] == 'read' ) and (fcommand_list[z+1] != 'journal'):
-            print ('Read what?')
-
-
-        if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south') :
-                room =  2
-
-    except:
-
-
-        # For now, we are assuming there is only one item.
-        # We will add code to ensure this is the case later.
-
-
-        try:
-            if (fcommand_list[z] == 'read') and (fcommand_list[z+1] == 'journal'):
-                display_journal ()
-
-            if (fcommand_list[z] == 'read'):
-                print ('Read what?')
-
-
-            if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south'):
-                room = 2
 
 
 
-        except:
-            print ('you can\'t do that here')
 
+    # the player forgot to tell the game what to read
+    if (fcommand_list[z] == 'read') and (fcommand_list[z+1] == 'journal'):
+        display_journal();
+
+    if (fcommand_list[z] == 'read' ) and (fcommand_list[z+1] != 'journal'):
+        print ('Read what?')
+
+
+    if (fcommand_list[z] == 's') or (fcommand_list[z] == 'S') or (fcommand_list[z]== 'south') :
+            room =  2
 
 
 
@@ -677,7 +734,7 @@ def parse_room4 (fcommand_list):
                 room = 2
             else:
                 pass
-    elif player_One.equp != None:
+    elif player_One.equip != None:
             if (len(fcommand_list) == 2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] == 'journal'):
                 display_personal_journal ()
             if (len(fcommand_list) ==  2) and (fcommand_list[command] == 'read') and (fcommand_list[command+1] != 'journal'):
@@ -727,7 +784,7 @@ def parse_room5 (fcommand_list):
         if (len(fcommand_list) >= 4):
             print ('The longest acceptable command is three words')
         else:
-            if (len(fcommand_list) == 1) or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            if (len(fcommand_list) == 1) or (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
                 room = 3
             else:
                 print ('You can\'t do that here.')
@@ -766,22 +823,21 @@ def parse_room6 (fcommand_list):
 # an autosave point here.
 #
 #----------------------------------------------------------------------------
-def parse_room7 (fcommand_list):
+def parse_room7 (fcommand_list, godmode):
     global ratbeaten
     global player_One
     global player_Armor
     global player_Weapon
 
-    player_One.room = 7
-
+    room = 7
+    player_One.room = room
     if (len(fcommand_list) >= 4):
         print ('Commands can be no more than three words.')
     elif (len(fcommand_list) == 3):
         print ('You can\'t do that here.')
-    elif (len((fcommand_list) == 2)):
+    elif (len(fcommand_list) == 2):
 
-
-        if (fcommand_list[0].upper == 'OPEN') and (fcommand_list[1].upper == 'DOOR'):
+        if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'door'):
             if player_One.ratbeaten == False:
                 print ('There is a rat blocking the door.')
             else:
@@ -789,13 +845,14 @@ def parse_room7 (fcommand_list):
                 return
 
 
-        if (fcommand_lis[0].upper == 'ATTACK') and (fcommand_list[1].upper == 'RAT'):
+        if (fcommand_list[0] == 'attack') and (fcommand_list[1] == 'rat') and (player_One.ratbeaten == False):
             rat_battle (godmode)
 
 
     elif (len(fcommand_list) == 1):
-        if (fcommand_list[0].upper == 'S') or (fcommand_list[1].upper == 'SOUTH'):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 6
+            return
 
     else:
         print ('You can\'t do that here')
@@ -879,9 +936,6 @@ def game_start (sg_godmode):
 
         if (check_syntax (command_list) == True):
             parse_general(command_list)
-
-
-            player_One.room = room
 
 
             if room == 1:
@@ -980,9 +1034,9 @@ def main ():
 
 
 knife = Weapon('slashing', 3, None, 0)
-sord =  Weapon ('slashing', 6, None, 0)
+sword = Weapon('slashing', 6, None, 0)
 if __name__ == "__main__":
     player_One = player()
     player_Armor =  Armor()
-    player_Weapon =  Weapon()
+    player_Weapon =  Weapon('blunt', 2, None, 0)
     main()
