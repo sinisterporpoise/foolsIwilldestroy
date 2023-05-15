@@ -99,6 +99,7 @@ class player:
          self.worn = None
          self.damage = 3
          self.ratbeaten = False
+         self.puzzle_solved = False
          self.room = 1
 
 
@@ -106,6 +107,8 @@ class player:
 player_One = player()
 player_Armor =  Armor()
 player_Weapon =  Weapon()
+
+
 
 #--------------------------------------------------------------------------
 #
@@ -120,6 +123,46 @@ def end_scren ():
         print ('')
         print ('Game Over.')
         exit()
+
+#--------------------------------------------------------------------------
+#
+# This is the first puzzle in the game and it is arelatively simple
+# statistics problem. I could have chose something more difficult, but it
+# seemed better not to.
+#
+#---------------------------------------------------------------------------
+def solve_puzzle ():
+
+    global player_one
+    choice = 0
+
+    print ('As you move to open the chest, oen chest automatically opens')
+    print (' to show that it is empty. After it opens, you hear the ')
+    print ('disembodied voice of your father. One of these three chests')
+    print ('contains something useful to you. Before I opened one, you had')
+    print (' a 33 percent chance of picking the right one.  Now, you know')
+    print (' that you have two boxes left. Would switching the initial box')
+    print ('improve the god_modes. My daughter should already know the answer.')
+    print ('')
+    print ('The voice finally says, \'What is your answer?\' Should you switch boxes? (Y/N)')
+
+    while (choice != 'Y') or (choice != 'N'):
+        choice = input()
+        choice = choice.upper()
+        if (choice == 'N'):
+            print ('A shot rings out through the chamber. You feel the bullet')
+            print ('enter your chest.')
+            print ('')
+            end_screen ()
+        elif (choice == 'Y'):
+            print ('')
+            print ('All but one of the chests disappears, and the remaining one')
+            print ('opens. YOu find a sword that seems to have a button attached.')
+            print ('When you press the button flames shoot out of the sword.')
+            print ('')
+            print ('You equip the flaming shiskebab sword.')
+            print ('')
+            player_One.equip == 'sword'
 #------------------------------------------------------------------------------
 #
 # The ever popular, ever-exciting, and ever cliched-battle with the rat.
@@ -151,7 +194,7 @@ def rat_battle (god_mode):
         while (rat_hp > 0) or (player_One.hitpoints > 0):
             input()
 
-            print (f'Rat HP: {rat_hp}, player_One.hitpoinse {player_One.hitpoints} ')
+            print (f'Rat HP: {rat_hp}, Your HP: {player_One.hitpoints} ')
             hit_chance = random.randint(0,100)
             initiative = random.randint(0,2)
             if (initiative == 0):
@@ -485,6 +528,43 @@ def display_room (gd_room, gd_inGame):
         else:
             print ('There is nothing blocking your way to the north and an exit to the south.')
 
+    # Backyard -- Center
+    if gd_room == 8:
+        print ('This is your backyard. You spent many hours playing here. The wind howls off in')
+        print ('the distance. The once green grass has become dry  through the prolonged drought.')
+        print ('A disused mower sits on the porch along with a long-abandonned barbecue grill.')
+        print ('')
+        print ('There are exits to the east and west and a shed to the north. There is a closed kitchin door to the south')
+
+
+    # Backyard -- east
+    if gd_room == 9:
+        print ('This is the eastern edge of the backyard. As with the rest of the backyard, there is dry')
+        print ('grass ans cracked, brown soil covering the yard. You take a moment to reflect on the')
+        print ('situation as you pause in the wind. If  your father hadn\'t engineered crops that could')
+        print ('withstand the drought, thousands of people in the region would be suffering from starvation.')
+        print ('')
+        print ('There is an exit to the west')
+
+    # Backyard -- west
+    if gd_room == 10:
+        print ('This is the western edge of your backyard. The grass is brown and the dirt is cracked')
+        print ('and dusty. You can see an alley heading off to the sthreet. Your father\'s car is')
+        print ('missing from its usual spot in the driveway.')
+        print ('')
+        print ('There are obvious exits to the east and north.')
+
+    #Backyard -- Shed
+    if gd_room == 11:
+        print ('This is the standard gardening shed. The older tools are rusty and once saw')
+        print ('heavy use. The few newer tools that exist maintain a shiny direct from the')
+        print ('hardware store look.')
+        if player_One.puzzle_solved == False:
+            print ('')
+            print ('You see three chests here.')
+        print ('')
+        print ('There is an exit to the south.')
+
     return
 
 #----------------------------------------------------------------------------------
@@ -693,7 +773,7 @@ def parse_room3 (fcommand_list):
     if (len(fcommand_list) == 2) and ((fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor')):
         print ('You put the cloth suit on.')
         player_Armor.type = 'cloth'
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'w') or (fcommand_list[command == 'W']) or (fcommand_list[command] == 'west'):
+    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'w') or (fcommand_list[command] == 'W') or (fcommand_list[command] == 'west'):
         room = 2
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'n') or (fcommand_list[command] == 'N') or (fcommand_list[command] == 'north'):
         room = 6
@@ -860,19 +940,60 @@ def parse_room7 (fcommand_list, godmode):
 
 
 #----------------------------------------------------------------------------
-# This is where we will parse room 8. I do not know what will be in it.
+#
+# This is the mian chacater's backyard. It is green and dry due to an ongoing
+# drought. There are a few flavor items here, but the important exits area
+# the shed, and extended backyards to the east and west.
+#
 #----------------------------------------------------------------------------
 def parse_room8 (fcommand_list):
 
+    global player_One
+    global rooms
+
+    player_One.room = room
+
+
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no more than 3 words.')
+    elif (len(fcommand_list == 3)):
+        print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'door'):
+            room = 7
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 10
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 9
+        if (fcommand_list[0] == 'n') or fcommand_list[0] == 'N' or (fcommand_list[0] == 'north'):
+            # Shed
+            room = 11
+    else:
+        print ('You can\'t do that here.')
 
     return
-
 
 #---------------------------------------------------------------------------
 # This is where we will parse room 9. I do not know what will be in it.
 #---------------------------------------------------------------------------
 def parse_room9 (fcommand_list):
 
+    global player_One
+    player_One.room = room
+
+
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no more than 3 words.')
+    elif (len(fcommand_list) == 3):
+        print ('You can\'t do that here')
+    elif (len(fcommand_list) == 2):
+        print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 8
+        if (fcommand_list[0] == 'n') or (fcommand_list == 'N') or (fcommand_list[0] == 'north'):
+            room = 12
 
     return
 
@@ -881,10 +1002,189 @@ def parse_room9 (fcommand_list):
 # This is where we will parse room 10. I do not know what will be in it.
 #----------------------------------------------------------------------------
 def parse_room10 (fcommand_list):
+    global player_One
+    player_One.room = room
+
+    if (len(fcommand_list) >= 4):
+        prin
+    return
+
+
+#----------------------------------------------------------------------------
+# This is where we will parse room 10. I do not know what will be in it.
+#----------------------------------------------------------------------------
+def parse_room10 (fcommand_list):
+    global player_One
+    player_One.room = room
+
+    if (len(fcommand_list) >= 4):
+        print('Commands can be no more than 3 words.')
+        return
+    elif (len(fcommand_list) == 3):
+        print ('You can\'t do that here')
+    elif (len(fcommand_list) == 2):
+        print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 8
+
+    return
+#---------------------------------------------------------------------------
+#
+# This is the shed with the simple logic puzzlie I have found.
+#
+#------------------------------------------------------------------------------
+def parse_room11 (fcommand_list):
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no more than 3 words.')
+        return
+    elif (len(fcommand_list) == 3):
+        if player_One.puzzle_solved == False:
+            if (fcommand_list[0] == 'open') and  (fcommand_list[1] == 'the') and (fcommand_list[2] == 'chest'):
+                solve_puzzle()
+        else:
+            print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 2):
+            if player_One.puzzle_solved == False:
+                if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'chest'):
+                    solve_puzzle()
+            else:
+                print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
+            room = 8
+    else:
+        print ('You can\'t do that here.')
 
 
     return
 
+#---------------------------------------------------------------------------
+#
+# This is an uninteresting alleyway with exits leading north and south.
+#
+#----------------------------------------------------------------------------
+def parse_room12 (fcommand_list):
+
+    parses
+
+#----------------------------------------------------------------------------
+#
+# This is a street way. There will be a rabid animal encounter here.
+#
+#-----------------------------------------------------------------------------
+def parse_room13 (fcommand_list):
+
+    pass
+
+#----------------------------------------------------------------------------
+#
+#  Room 14
+#
+#-----------------------------------------------------------------------------
+def parse_room14 (fcommand_list):
+
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 15
+#
+#----------------------------------------------------------------------------
+def parse_room15 (fcommand_list):
+
+    pass
+
+#------------------------------------------------------------------------------
+#
+# Room 16
+#
+#-----------------------------------------------------------------------------
+def parse_room16 (fcommand_list):
+
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 17
+#
+#----------------------------------------------------------------------------
+def parse_room17 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 18
+#
+#----------------------------------------------------------------------------
+def parse_room18 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 19
+#
+#----------------------------------------------------------------------------
+def parse_room19 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 20
+#
+#---------------------------------------------------------------------------
+def parse_room20 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 21
+#
+#---------------------------------------------------------------------------
+def parse_room21 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 22
+#
+#---------------------------------------------------------------------------
+def parse_room22 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 23
+#
+#---------------------------------------------------------------------------
+def parse_room23 (fcommand_list):
+
+    pass
+
+#---------------------------------------------------------------------------
+#
+# Room 24
+#
+#---------------------------------------------------------------------------
+def parse_room24 (fcommand_list):
+
+    pass
+
+
+#---------------------------------------------------------------------------
+#
+# Room 25
+#
+#----------------------------------------------------------------------------
+def parse_room25 (command_list):
+
+    pass
 
 #----------------------------------------------------------------------------
 #
@@ -960,6 +1260,37 @@ def game_start (sg_godmode):
                 parse_room9 (command_list)
             elif room == 10:
                 parse_room10 (command_list)
+            elif room == 11:
+                parse_room11 (command_list)
+            elif room == 12:
+                parse_room12 (command_list)
+            elif room == 13:
+                parse_room13 (command_list)
+            elif room == 14:
+                parse_room14 (command_list)
+            elif room == 15:
+                parse_room15 (command_list)
+            elif room == 16:
+                parse_room16 (command_list)
+            elif room == 17:
+                paarse_room17 (command_list)
+            elif room == 18:
+                parse_room18 (command_list)
+            elif room == 19:
+                parse_room19 (command_list)
+            elif room == 20:
+                parse_room20 (command_list)
+            elif room == 21:
+                parse_room22 (command_list)
+            elif room == 22:
+                parse_room22 (command_list)
+            elif room == 23:
+                parse_room23 (command_list)
+            elif room == 24:
+                parse_room24 (command_list)
+            elif room == 25:
+                parse_room25 (command_list)
+
         else:
             print ('Syntax error')
 
