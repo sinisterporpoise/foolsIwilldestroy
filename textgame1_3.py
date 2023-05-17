@@ -100,6 +100,7 @@ class player:
          self.damage = 3
          self.ratbeaten = False
          self.puzzle_solved = False
+         self.dog_beaten = False
          self.room = 1
 
 
@@ -116,7 +117,7 @@ player_Weapon =  Weapon()
 # separate function.
 #
 #--------------------------------------------------------------------------
-def end_scren ():
+def end_screen ():
         print ('You shuffle off your mortal coil.  Weeks later, the')
         print ('the city is overrun by crazed invidiauls attacking the')
         print ('few remaining people not affected by the virus.')
@@ -163,6 +164,9 @@ def solve_puzzle ():
             print ('You equip the flaming shiskebab sword.')
             print ('')
             player_One.equip == 'sword'
+            break
+
+    return
 #------------------------------------------------------------------------------
 #
 # The ever popular, ever-exciting, and ever cliched-battle with the rat.
@@ -203,7 +207,7 @@ def rat_battle (god_mode):
                 if hit_chance <= 75:
 
                     if player_One.equip == None:
-                        player_damage = random.randint(0,3)+1
+                        player_damage = random.randint(0,2)+1
                         rat_hp -= player_damage
                     else:
                         player_damage = knife.swing()
@@ -250,7 +254,18 @@ def rat_battle (god_mode):
                 player_One.ratbeaten = True
                 return
 
+    return
 
+#------------------------------------------------------------------------------
+#
+# This is a simple function that will handle all the battles in this game_
+# after the initial encounter with the rat. We're going to use the concept
+# of objects to make this far easier.
+#
+#-------------------------------------------------------------------------------
+def handle_battle (monster_type):
+
+    pass
 
 #------------------------------------------------------------------------------
 #
@@ -564,6 +579,57 @@ def display_room (gd_room, gd_inGame):
             print ('You see three chests here.')
         print ('')
         print ('There is an exit to the south.')
+
+    if gd_room == 12:
+        print ('This is an alleayway meandering through the the town. The')
+        print ('shoulder of the road gives way to dry, cracked soil. There is')
+        print ('little of interest here')
+        print ('')
+        print ('There are exits to the north and south.')
+    if gd_room == 13:
+        print ('The alley gives way to a strett here. The city council did')
+        print ('its best to keep the major thoroughfares green, and you see')
+        print ('a strain of grass your father developed early clinging on to')
+        print ('life, but it looks lke the continued drought and rising')
+        print ('temperatures have been too much for it.')
+        print ('')
+        print ('There are obvious exits to the west and to the south.')
+
+    if gd_room == 14:
+        print ('The alley gives way to a strett here. The city council did')
+        print ('its best to keep the major thoroughfares green, and you see')
+        print ('a strain of grass your father developed early clinging on to')
+        print ('life, but it looks lke the continued drought and rising')
+        print ('temperatures have been too much for it.' )
+        print ('')
+        if player_One.dob_beaten == False:
+            print ('A snarling dog leaps towards you and attacks.')
+            print ('')
+            monster_type = 'dog'
+            handle_battle(monster_type)
+        print ('The are obvious exists to the east and to the south.')
+    if gd_room == 15:
+        pass
+    if gd_room == 16:
+        pass
+    if gd_room == 17:
+        pass
+    if gd_room == 18:
+        pass
+    if gd_room == 19:
+        pass
+    if gd_room == 20:
+        pass
+    if gd_room == 21:
+        pass
+    if gd_room == 22:
+        pass
+    if gd_room == 23:
+        pass
+    if gd_room == 24:
+        pass
+    if gd_room == 25:
+        pass
 
     return
 
@@ -886,10 +952,10 @@ def parse_room6 (fcommand_list):
     player_One.room = room
 
     if (len(fcommand_list) >=1):
-        if (fcommand_list[0] == 'N') or (fcommand_list[0] == 'n') or (fcommand_list[0].upper == 'NORTH'):
+        if (fcommand_list[0] == 'N') or (fcommand_list[0] == 'n') or (fcommand_list[0] == 'north'):
             room = 7
             return
-        if (fcommand_list[0].upper == 'S') or (fcommand_list.upper == 'SOUTH'):
+        if (fcommand_list[0] == 'S') or (fcommand_list[0] == 's') or (fcommand_list[0] == 'south'):
             room = 4
         else:
             print ('You can\'t do that here')
@@ -908,8 +974,8 @@ def parse_room7 (fcommand_list, godmode):
     global player_One
     global player_Armor
     global player_Weapon
+    global room
 
-    room = 7
     player_One.room = room
     if (len(fcommand_list) >= 4):
         print ('Commands can be no more than three words.')
@@ -920,9 +986,9 @@ def parse_room7 (fcommand_list, godmode):
         if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'door'):
             if player_One.ratbeaten == False:
                 print ('There is a rat blocking the door.')
-            else:
+            if player_One.ratbeaten == True:
+                print ('You open the door.')
                 room = 8
-                return
 
 
         if (fcommand_list[0] == 'attack') and (fcommand_list[1] == 'rat') and (player_One.ratbeaten == False):
@@ -949,23 +1015,23 @@ def parse_room7 (fcommand_list, godmode):
 def parse_room8 (fcommand_list):
 
     global player_One
-    global rooms
+    global room
 
     player_One.room = room
 
 
     if (len(fcommand_list) >= 4):
         print ('Commands can be no more than 3 words.')
-    elif (len(fcommand_list == 3)):
+    elif (len(fcommand_list) == 3):
         print ('You can\'t do that here.')
     elif (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'door'):
             room = 7
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
-            room = 10
-        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
             room = 9
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 10
         if (fcommand_list[0] == 'n') or fcommand_list[0] == 'N' or (fcommand_list[0] == 'north'):
             # Shed
             room = 11
@@ -980,6 +1046,7 @@ def parse_room8 (fcommand_list):
 def parse_room9 (fcommand_list):
 
     global player_One
+    global room
     player_One.room = room
 
 
@@ -990,31 +1057,23 @@ def parse_room9 (fcommand_list):
     elif (len(fcommand_list) == 2):
         print ('You can\'t do that here.')
     elif (len(fcommand_list) == 1):
-        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'w') or (fcommand_list[0] == 'west'):
             room = 8
-        if (fcommand_list[0] == 'n') or (fcommand_list == 'N') or (fcommand_list[0] == 'north'):
-            room = 12
+    else:
+        print ('You can\'t do that here.')
 
     return
 
 
 #----------------------------------------------------------------------------
+#
 # This is where we will parse room 10. I do not know what will be in it.
+#
 #----------------------------------------------------------------------------
 def parse_room10 (fcommand_list):
     global player_One
-    player_One.room = room
+    global room
 
-    if (len(fcommand_list) >= 4):
-        prin
-    return
-
-
-#----------------------------------------------------------------------------
-# This is where we will parse room 10. I do not know what will be in it.
-#----------------------------------------------------------------------------
-def parse_room10 (fcommand_list):
-    global player_One
     player_One.room = room
 
     if (len(fcommand_list) >= 4):
@@ -1025,8 +1084,10 @@ def parse_room10 (fcommand_list):
     elif (len(fcommand_list) == 2):
         print ('You can\'t do that here.')
     elif (len(fcommand_list) == 1):
-        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e'):
             room = 8
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 12
 
     return
 #---------------------------------------------------------------------------
@@ -1035,6 +1096,11 @@ def parse_room10 (fcommand_list):
 #
 #------------------------------------------------------------------------------
 def parse_room11 (fcommand_list):
+
+    global player_One
+    global room
+
+    player_One.room = room
     if (len(fcommand_list) >= 4):
         print ('Commands can be no more than 3 words.')
         return
@@ -1066,9 +1132,33 @@ def parse_room11 (fcommand_list):
 #----------------------------------------------------------------------------
 def parse_room12 (fcommand_list):
 
-    parses
+    global room
+    global player_One
 
-#----------------------------------------------------------------------------
+    player_One.room = room
+
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no more than 3 words.')
+        return
+    elif (len(fcommand_list) == 3):
+        if player_One.puzzle_solved == False:
+            if (fcommand_list[0] == 'open') and  (fcommand_list[1] == 'the') and (fcommand_list[2] == 'chest'):
+                solve_puzzle()
+        else:
+            print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 2):
+            if player_One.puzzle_solved == False:
+                if (fcommand_list[0] == 'open') and (fcommand_list[1] == 'chest'):
+                    solve_puzzle()
+            else:
+                print ('You can\'t do that here.')
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
+            room = 10
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 13
+    else:
+        print ('You can\'t do that here.')
 #
 # This is a street way. There will be a rabid animal encounter here.
 #
@@ -1225,7 +1315,6 @@ def game_start (sg_godmode):
             exit()
 
 
-        print (room)
         print ('Debugging', command_list)
 
 
