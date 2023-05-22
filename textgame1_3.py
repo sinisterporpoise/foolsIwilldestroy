@@ -252,6 +252,7 @@ def rat_battle (god_mode):
             elif rat_hp  <= 0:
                 print ('The rat no longer bars your way.')
                 player_One.ratbeaten = True
+                player_One.htipoints = 10
                 return
 
     return
@@ -267,13 +268,16 @@ def handle_battle (monster_type):
 
     class Monster:
         def __init__ (self, damage = 3, hitpoints = 10, armor = 2, resistance = None):
-            damage = damage
-            hitpoints = hitpoints
-            armor = armor
-            resistance = resistance
+            self.damage = damage
+            self.hitpoints = hitpoints
+            self.armor = armor
+            self.resistance = resistance
 
         def atack(self):
             return (random.randint(0, self.damage))
+
+
+
 
     damage = 0
     monster_damage = 0
@@ -286,7 +290,9 @@ def handle_battle (monster_type):
     if monster_type == 'dog':
         monster_hitpoints = dog.hitpoints
 
-    while (player_One.hitpoints >= 1) or (monster.hitpoints >= 1):
+
+
+    while (player_One.hitpoints >= 1) or (monster_hitpoints >= 1):
         initiative  = random.randint(0,2)
         print (f'Monster Hitpoints: {monster_hitpoints}, Player Hitpoints: {player_One.hitpoints}')
 
@@ -297,14 +303,40 @@ def handle_battle (monster_type):
             elif player_One.equipe == 'sword':
                 player_damage = sword.swing()
 
-            monster_damage = determine_damage (monster_type)
+            if (monster_type == 'dog'):
+                monster_damage = random.randint(0,dog.damage)+1
+            elif (monster_type == 'infected'):
+                #monster_damage = random.randint(0, infected.damage) + 1
+                pass
+
             monster_hitpoints -= player_damage
-            player_hitpoints -= monster_damage
+            player_One.hitpoints -= monster_damage
+
+            print (f'You thit the {monster_type} for {player_damage} hitpoints withj your {player_One.equip}')
         else:
-            print ('The rat wins initiative')
+            print (f'The {monster_type} wins initiative')
+            player_One.htipoints -= monster_damage
+            print (f'The {monster_type} hits you  for {monster_damage}')
+            if (monster_hitpoints == 0):
+                break
 
 
+            if player_One.equip == 'knife':
+                player_damage = knife.swing()
+            elif player_One.equipe == 'sword':
+                player_damage = sword.swing()
 
+            print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip')
+            player_One.hitpoints -= monster_damage
+            if (player_One.hitponse == 0):
+                break
+
+        if (monster_type == 'dog') and (monster_hitpoints <= 0):
+            player_One.dog_beaten == True
+        else:
+            end_screen()
+
+        player_One.hitpoints = 10
 
 
 
@@ -643,7 +675,7 @@ def display_room (gd_room, gd_inGame):
         print ('life, but it looks lke the continued drought and rising')
         print ('temperatures have been too much for it.' )
         print ('')
-        if player_One.dob_beaten == False:
+        if player_One.dog_beaten == False:
             print ('A snarling dog leaps towards you and attacks.')
             print ('')
             monster_type = 'dog'
@@ -875,6 +907,7 @@ def parse_room3 (fcommand_list):
     if (len(fcommand_list) == 2) and ((fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor')):
         print ('You put the cloth suit on.')
         player_Armor.type = 'cloth'
+        player_One.worn == 'cloth'
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'w') or (fcommand_list[command] == 'W') or (fcommand_list[command] == 'west'):
         room = 2
     if (len(fcommand_list) == 1) and (fcommand_list[command] == 'n') or (fcommand_list[command] == 'N') or (fcommand_list[command] == 'north'):
@@ -992,7 +1025,7 @@ def parse_room6 (fcommand_list):
             room = 7
             return
         if (fcommand_list[0] == 'S') or (fcommand_list[0] == 's') or (fcommand_list[0] == 'south'):
-            room = 4
+            room = 3
         else:
             print ('You can\'t do that here')
     return
@@ -1210,7 +1243,7 @@ def parse_room13 (fcommand_list):
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 12
-        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e'):
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'w') or (fcommand_list[0] == 'w'):
             room = 14
     else:
         print ('You can\'t do that here.')
@@ -1423,7 +1456,7 @@ def game_start (sg_godmode):
 
 
         print ('Debugging', command_list)
-        pritn (f'Room: {room}')
+        print (f'Room: {room}')
 
 
         if (command_list[0] == 'quit') or (command_list[0] == 'exit'):
