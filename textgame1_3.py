@@ -33,7 +33,7 @@ prepositions =['in', 'on', 'under', 'above', 'to', 'beneath']
 directions = ['east', 'north', 'south', 'east', 'northeast', 'northwest', 'southwest', 'southeast',
             'e', 'n', 's', 'w', 'E', 'N', 'S', 'W', 'NE', "SE", 'SE', 'Sw',
             'ne', 'nw', 'se', 'sw']
-objects = ['journal, knife, gun, sword', 'toilet', 'rat']
+objects = ['journal, knife, gun, sword', 'toilet', 'rat', 'dog', 'jacket', 'leather']
 
 
 room = 1
@@ -110,6 +110,30 @@ player_Armor =  Armor()
 player_Weapon =  Weapon()
 
 
+def display_news ():
+    print ('')
+    print ('Genetic Engineer blamed for crop failure.')
+    print ('')
+    print ('Frank Azaria, local gentic engineer, faces accusations')
+    print ('that he caused the local plant failures, and manyu residents')
+    print ('demand that he face criminal charges.')
+    print ('')
+    print ('Azaria, who did not work on the local crops that failed, told')
+    print ('the Alisdale Journal that due to public perception no genetically')
+    print ('modified crops were used in the area, and climate science models')
+    print ('predicted such crop failures unless a way could be found to end')
+    print ('the multi-year drought.')
+    print ('')
+    print ('Climate change skeptics believed that natural cycles caused the ')
+    print ('prolong drought that grips the region.  Scientific models predicted')
+    print ('human activity would cause the situation to get worse if corporations')
+    print ('did not act to correct the damage they had caused...')
+    print ('')
+    print ('The article continues, but your eyes begin to glaze over. The ')
+    print ('towns few remaining residents switched over to the genetically')
+    print ('plants months ago, when they could find them.')
+    return
+
 
 #--------------------------------------------------------------------------
 #
@@ -118,12 +142,12 @@ player_Weapon =  Weapon()
 #
 #--------------------------------------------------------------------------
 def end_screen ():
-        print ('You shuffle off your mortal coil.  Weeks later, the')
-        print ('the city is overrun by crazed invidiauls attacking the')
-        print ('few remaining people not affected by the virus.')
-        print ('')
-        print ('Game Over.')
-        exit()
+    print ('You shuffle off your mortal coil.  Weeks later, the')
+    print ('the city is overrun by crazed invidiauls attacking the')
+    print ('few remaining people not affected by the virus.')
+    print ('')
+    print ('Game Over.')
+    exit()
 
 #--------------------------------------------------------------------------
 #
@@ -143,7 +167,7 @@ def solve_puzzle ():
     print ('contains something useful to you. Before I opened one, you had')
     print (' a 33 percent chance of picking the right one.  Now, you know')
     print (' that you have two boxes left. Would switching the initial box')
-    print ('improve the god_modes. My daughter should already know the answer.')
+    print ('improve the odds. My daughter should already know the answer.')
     print ('')
     print ('The voice finally says, \'What is your answer?\' Should you switch boxes? (Y/N)')
 
@@ -163,7 +187,8 @@ def solve_puzzle ():
             print ('')
             print ('You equip the flaming shiskebab sword.')
             print ('')
-            player_One.equip == 'sword'
+            player_One.equip = 'sword'
+            player_One.puzzle_solved = True
             break
 
     return
@@ -196,7 +221,7 @@ def rat_battle (god_mode):
         return
     else:
         while (rat_hp > 0) or (player_One.hitpoints > 0):
-            input()
+            input('Press Enter to continue.')
 
             print (f'Rat HP: {rat_hp}, Your HP: {player_One.hitpoints} ')
             hit_chance = random.randint(0,100)
@@ -238,7 +263,7 @@ def rat_battle (god_mode):
                     hit_chance = random.randint(0,100)
                     if (hit_chance <= 75):
                         if player_One.equip == None:
-                            random.randint(0,player_One.damage) + 1
+                            player_damage = random.randint(0,player_One.damage) + 1
                         else:
                             player_damage = knife.swing()
 
@@ -247,15 +272,19 @@ def rat_battle (god_mode):
                     else:
                         print ('You miss the rat.')
 
-            if player_One.hitpoints <= 0:
-                end_screen()
-            elif rat_hp  <= 0:
-                print ('The rat no longer bars your way.')
-                player_One.ratbeaten = True
-                player_One.htipoints = 10
-                return
+            if (rat_hp <= 0):
+                break
+            if (player_One.hitpoints <= 0):
+                break
 
-    return
+
+        if player_One.hitpoints <= 0:
+            end_screen()
+        elif rat_hp  <= 0:
+            print ('The rat no longer bars your way.')
+            player_One.ratbeaten = True
+            player_One.htipoints = 10
+            return
 
 #------------------------------------------------------------------------------
 #
@@ -264,7 +293,7 @@ def rat_battle (god_mode):
 # of objects to make this far easier.
 #
 #-------------------------------------------------------------------------------
-def handle_battle (monster_type):
+def handle_battle (monster_type, sg_godmode):
 
     class Monster:
         def __init__ (self, damage = 3, hitpoints = 10, armor = 2, resistance = None):
@@ -273,71 +302,111 @@ def handle_battle (monster_type):
             self.armor = armor
             self.resistance = resistance
 
-        def atack(self):
-            return (random.randint(0, self.damage))
-
-
-
-
-    damage = 0
-    monster_damage = 0
 
     dog = Monster(3, 10, 2, 'water')
     knife = Weapon('slashing', 3, None, 0)
     sword = Weapon('slashing', 6, None, 'fire')
-    global player_One
 
+    global player_One
+    global player_Armor
+
+    player_One.htipoints = 10
+    damage = 0
+    monster_damage = 0
+    player_damage = 0
     if monster_type == 'dog':
         monster_hitpoints = dog.hitpoints
+        monster_Armor  = dog.armor
 
 
+    if (sg_godmode == True):
+        print (f'The {monster_type} dies in the presence of an obvious god.')
+        if (monster_type == 'dog'):
+            player_One.dog_beaten = True
+        return
 
-    while (player_One.hitpoints >= 1) or (monster_hitpoints >= 1):
-        initiative  = random.randint(0,2)
-        print (f'Monster Hitpoints: {monster_hitpoints}, Player Hitpoints: {player_One.hitpoints}')
 
-        if (initiative == 0):
-            print ('You win the initiative')
-            if player_One.equip == 'knife':
-                player_damage = knife.swing()
-            elif player_One.equipe == 'sword':
-                player_damage = sword.swing()
+    while (player_One.hitpoints > 0) or (monster_hitpoints > 0):
+        initiative = random.randint(0,1) + 1
+        player_hit_chance = random.randint(0,100)
+        monster_hit_chance = random.randint(0,100)
 
-            if (monster_type == 'dog'):
-                monster_damage = random.randint(0,dog.damage)+1
-            elif (monster_type == 'infected'):
-                #monster_damage = random.randint(0, infected.damage) + 1
-                pass
+        print (f'Monster hitpoints: {monster_hitpoints}, Player hitpoints: {player_One.hitpoints}')
+        input ()
+        if (initiative == 1):
+            print ('You win initiative.')
 
-            monster_hitpoints -= player_damage
-            player_One.hitpoints -= monster_damage
+            if (player_hit_chance <= 85):
+                if player_One.equip == None:
+                    player_damage = random.randint(0,2)+1 - monster_Armor
+                if player_One.equip == 'knife':
+                    player_damage = knife.swing() - monster_Armor
+                if player_One.equip == 'sword':
+                    player_damage = sword.swing() - monster_Armor
 
-            print (f'You thit the {monster_type} for {player_damage} hitpoints withj your {player_One.equip}')
-        else:
+                if (player_damage > 0):
+                    print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip}')
+                    monster_hitpoints -= player_damage
+                else:
+                    print (f'Your {player_One.equip} glances off the {monster_type}')
+            else:
+                print (f'You miss the {monster_type:}')
+
+            if (monster_hit_chance <= 65):
+                if monster_type == 'dog':
+                    monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+
+                if (monster_damage > 0):
+                    print (f'The {monster_type} hits you for {monster_damage}')
+                    player_One.hitpoints -= monster_damage
+                else:
+                    print ('The {monter_type}\s attack glances off your {player_One.worn} armor.')
+            else:
+                print (f'The {monster_type} misses you.')
+
+        elif (initiative == 2):
             print (f'The {monster_type} wins initiative')
-            player_One.htipoints -= monster_damage
-            print (f'The {monster_type} hits you  for {monster_damage}')
-            if (monster_hitpoints == 0):
-                break
+
+            if (monster_hit_chance <= 65):
+                if monster_type == 'dog':
+                    monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+
+                if (monster_damage > 0):
+                    print (f'The {monster_type} hits you for {monster_damage}')
+                    player_One.hitpoints -= monster_damage
+                else:
+                    print ('The {monter_type}\s attack glances off your {player_One.worn} armor.')
+            else:
+                print (f'The {monster_type} misses you.')
 
 
-            if player_One.equip == 'knife':
-                player_damage = knife.swing()
-            elif player_One.equipe == 'sword':
-                player_damage = sword.swing()
+            if (player_hit_chance <= 85):
+                if player_One.equip == None:
+                    player_damage = random.randint(0,2)+1 - monster_Armor
+                if player_One.equip == 'knife':
+                    player_damage = knife.swing() - monster_Armor
+                if player_One.equip == 'sword':
+                    player_damage = sword.swing() - monster_Armor
 
-            print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip')
-            player_One.hitpoints -= monster_damage
-            if (player_One.hitponse == 0):
-                break
+                if (player_damage > 0):
+                    print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip}')
+                    monster_hitpoints -= player_damage
+                else:
+                    print (f'Your {player_One.equip} glances off the {monster_type}')
+            else:
+                print (f'You miss the {monster_type:}')
 
-        if (monster_type == 'dog') and (monster_hitpoints <= 0):
-            player_One.dog_beaten == True
-        else:
-            end_screen()
+        if player_One.hitpoints < 1:
+            break
+        if monster_hitpoints < 1:
+            break
 
-        player_One.hitpoints = 10
 
+    if (player_One.hitpoints < 1):
+        end_screen()
+
+    if (monster_hitpoints < 1) and (monster_type == 'dog'):
+        player_One.dog_beaten = True
 
 
 #------------------------------------------------------------------------------
@@ -523,7 +592,7 @@ def display_personal_journal ():
 # This function will simply print out a visiaul display of each rooom.
 #
 #------------------------------------------------------------------------------
-def display_room (gd_room, gd_inGame):
+def display_room (gd_room, gd_inGame, sg_godmode):
 
     global player_One
     # Your father's lab
@@ -561,6 +630,8 @@ def display_room (gd_room, gd_inGame):
                 print ('')
                 print ('You see a suit of  cloth from your father\'s days')
                 print ('in the Society for Creative Anarchism.')
+            else:
+                pass
 
 
             print ('')
@@ -611,7 +682,7 @@ def display_room (gd_room, gd_inGame):
         print ('')
         print ('There is a closed door to the north and an exit to the south.')
         if player_One.ratbeaten == False:
-            print ('You see a large rate blocking the exit.  It will need to be removed. It does not')
+            print ('You see a large rat blocking the exit.  It will need to be removed. It does not')
             print ('look friendly. It looks like its gene code has been altered in some way.')
         else:
             print ('There is nothing blocking your way to the north and an exit to the south.')
@@ -622,7 +693,7 @@ def display_room (gd_room, gd_inGame):
         print ('the distance. The once green grass has become dry  through the prolonged drought.')
         print ('A disused mower sits on the porch along with a long-abandonned barbecue grill.')
         print ('')
-        print ('There are exits to the east and west and a shed to the north. There is a closed kitchin door to the south')
+        print ('There are exits to the east and west and a shed to the north. There is a closed kitchen door to the south')
 
 
     # Backyard -- east
@@ -679,29 +750,119 @@ def display_room (gd_room, gd_inGame):
             print ('A snarling dog leaps towards you and attacks.')
             print ('')
             monster_type = 'dog'
-            handle_battle(monster_type)
+            handle_battle(monster_type, sg_godmode)
             print('')
-        print ('The are obvious exists to the east and to the south.')
+        print ('The are obvious exists to the east, west and to the south.')
     if gd_room == 15:
-        pass
+        print ('This is a neighbor\'s tiny house. The one room dwelling has')
+        print ('everything a person needs to live. The various appliances')
+        print ('might have been helpful to the corpse you see before you')
+        print ('at one point. You guess, from your father\'s lessons in')
+        print ('anatomy, she has been dead for at least a week.')
+        print ('')
+        print ('After going outside to throw up, you return to the area.')
+        print ('')
+        print ('The is an obvious exit to the North.')
     if gd_room == 16:
-        pass
+        print ('This is the main street in the city. A few green plants')
+        print ('created by your father hang on despite the dray, parached')
+        print ('earth. The rest of the plants are dead and decaying.')
+        print ('The road contains a few sets of human footprints that seem')
+        print ('to be made by someone with no clear intention of where they')
+        print ('intended to go.')
+        print ('')
+        print ('You see exits to the North, South, West, and East.')
     if gd_room == 17:
-        pass
+        print ('This is an abonadonned motorcycle workshop. At least you')
+        print ('think it is abandonned.  Various tools and motorcycle parts')
+        print ('are strewn across the floor as if someone had ransacked the')
+        print ('place looking for something in a hurry.')
+        print ('')
+        if (player_One.worn == None) or (player_One.worn == 'cloth'):
+            print ('There is a biker jacket on the floor here.')
+            print ('')
+
+        print ('There is an obvious exit to the south')
+
+
     if gd_room == 18:
-        pass
+        print ('This is an abandoned convenience store. It has been ')
+        print ('closed for as long as your family has lived in this town.')
+        print ('The original owners took whatever useful goods it once held')
+        print ('long ago.')
+        print ('')
+        print ('There is an obxious exit to the north.')
+
+
     if gd_room == 19:
-        pass
+        print ('The alley gives way to a strett here. The city council did')
+        print ('its best to keep the major thoroughfares green, and you see')
+        print ('a strain of grass your father developed early clinging on to')
+        print ('life, but it looks lke the continued drought and rising')
+        print ('temperatures have been too much for it.' )
+        print ('')
+        print ('There are obvious exits to the south, west and east.')
+
+
     if gd_room == 20:
-        pass
+        print ('This is the hobby shop where you spent many hours looking')
+        print ('for supplies for your own projects. Your father also spent')
+        print ('many hours here trying to make sure you had STEM toys so you')
+        print ('could develop whatever skills you had. Although you had no')
+        print ('interest in becoming a genetic engineer, yoiu did discover a')
+        print ('a passion for programming and computer science that the store')
+        print ('could not adequately server.  You see recent foam periodically')
+        print ('dotting the floor and a set of footprints that head in a')
+        print ('northeasterly direction.')
+        print ('')
+        print ('There is an obvious exit to the north.')
+
+
     if gd_room == 21:
-        pass
+            print ('The alley gives way to a strett here. The city council did')
+            print ('its best to keep the major thoroughfares green, and you see')
+            print ('a strain of grass your father developed early clinging on to')
+            print ('life, but it looks lke the continued drought and rising')
+            print ('temperatures have been too much for it. It looks like the')
+            print ('proprietor has left some newspaper clippings on the counter.')
+            print ('')
+            print ('There are obvious exits to the northwest, southwest, east and south.')
+
+
     if gd_room == 22:
-        pass
+        print ('This dwelling is now abandonned. Whoever lives here put decided')
+        print ('to frame something that looks like a letter on one of the walls.')
+        print ('As you begin to read it, you realize that this is a plan to form')
+        print ('a group of citizens to collect your father and put him on trial')
+        print ('for his crimes. It seems that the members of this group')
+        print ('decided on  your father\'s sentence long before they ever got')
+        print ('to hold their trial.')
+        print ('')
+        print ('There is an obvious exit to the north.')
+
+
     if gd_room == 23:
-        pass
+        print ('This is a side street that leads to a dead end. The trail you')
+        print ('saw at the convience store continues to amble from the wast.')
+        print ('You hear some growling sounds coming from the Northwest.')
+        print ('')
+        print ('You see obvious exits heading to the west and southeast.')
+
+
     if gd_room == 24:
-        pass
+        print ('This is your father\'s work lab.It is surprisingly empty')
+        print ('and looks like it has been recently cleaned and vacated.')
+        print ('You go over to his desk and look through his drawers to see')
+        print ('if he left some notes. Even those are gone. Unlike many of')
+        print ('the other buildings in town, this one looks like its been')
+        print ('used recently.')
+        print ('')
+        print ('You see a trapdoor here.')
+        print ('There is an obvious exit leading to the northeeast.')
+
+
+    # Hehe, we finally spring the rabid human on the player.
+    # Good thing they've been vaccinated/
     if gd_room == 25:
         pass
 
@@ -738,7 +899,7 @@ def check_syntax (fcommand_list):
     except:
         return True
 #----------------------------------------------------------------------------------
-# This command just parses general_commands that are not tied to any room, such
+# This command just parses general_commands that are not tied to any room, suchf
 # as save, load, quit, or exit.
 #----------------------------------------------------------------------------------
 def parse_general(fcommand_list):
@@ -900,22 +1061,29 @@ def parse_room3 (fcommand_list):
 
     global player_One
     global room
+    global player_Armor
     player_One.room = room
     command = 0
 
 
-    if (len(fcommand_list) == 2) and ((fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor')):
-        print ('You put the cloth suit on.')
-        player_Armor.type = 'cloth'
-        player_One.worn == 'cloth'
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'w') or (fcommand_list[command] == 'W') or (fcommand_list[command] == 'west'):
-        room = 2
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'n') or (fcommand_list[command] == 'N') or (fcommand_list[command] == 'north'):
-        room = 6
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 's') or (fcommand_list[command] == 'S') or (fcommand_list[command] == 'south'):
-        print ('You cannot go that direction.')
-    if (len(fcommand_list) == 1) and (fcommand_list[command] == 'e') or (fcommand_list[command] == 'E') or (fcommand_list[command] == 'east'):
-        room = 5
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth') or (fcommand_list[command+1] == 'armor'):
+            print ('You put the cloth suit on.')
+            player_One.worn == 'cloth'
+            player_Armor.value += 1
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth'):
+            print ('You put the cloth suit on.')
+            player_One.worn = 'coth'
+    if (len(fcommand_list) == 1):
+        if (fcommand_list[command] == 'w') or (fcommand_list[command] == 'W') or (fcommand_list[command] == 'west'):
+            room = 2
+        if (fcommand_list[command] == 'n') or (fcommand_list[command] == 'N') or (fcommand_list[command] == 'north'):
+            room = 6
+        if (fcommand_list[command] == 's') or (fcommand_list[command] == 'S') or (fcommand_list[command] == 'south'):
+            print ('You cannot go that direction.')
+        if (len(fcommand_list) == 1) and (fcommand_list[command] == 'e') or (fcommand_list[command] == 'E') or (fcommand_list[command] == 'east'):
+            room = 5
     if (len(fcommand_list) > 1) and (fcommand_list[command] == 'read'):
         print ('There is nothing here to read.')
     if (len(fcommand_list) == 3) and (fcommand_list[command] == 'look') and (fcommand[command+1] in prepositions) and (fcommand_list[command+2] in objects):
@@ -1087,6 +1255,7 @@ def parse_room8 (fcommand_list):
     global room
 
     player_One.room = room
+    player_One.hitpoints = 10
 
 
     if (len(fcommand_list) >= 4):
@@ -1268,9 +1437,11 @@ def parse_room14 (fcommand_list):
         print ('You can\'t do that here.')
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'w'):
-            room = 13
-        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e'):
             room = 16
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e') or (fcommand_list[0] == 'e'):
+            room = 13
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
+            room = 15
     else:
         print ('You can\'t do that here.')
 
@@ -1296,7 +1467,7 @@ def parse_room15 (fcommand_list):
         print ('You can\'t do that here.')
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
-            room = 16
+            room = 14
 
     else:
         print ('You can\'t do that here.')
@@ -1305,7 +1476,7 @@ def parse_room15 (fcommand_list):
 
 #------------------------------------------------------------------------------
 #
-# Room 16
+#  This is part of the main street through the town.
 #
 #-----------------------------------------------------------------------------
 def parse_room16 (fcommand_list):
@@ -1322,13 +1493,13 @@ def parse_room16 (fcommand_list):
             print ('You can\'t do that here.')
         elif (len(fcommand_list) == 1):
             if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
-                room =  15
-            if (fcommand_list[0] == 'w') or (fcommnad_list[0] == 'W') or (fcommand_list[0] == 'west'):
+                room =  18
+            if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
                 room = 19
             if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
-                room = 15
+                room = 14
             if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
-                room = 18
+                room = 17
         else:
             print ('You can\'t do that here.')
 
@@ -1336,57 +1507,178 @@ def parse_room16 (fcommand_list):
 
 #----------------------------------------------------------------------------
 #
-# Room 17
+#  This is the abandonned motorcycle shop. There is a an exit to the southern
+# and a leather jacket the player can find here.
 #
 #----------------------------------------------------------------------------
 def parse_room17 (fcommand_list):
 
-    pass
+    global room
+    global player_One
+    global player_Armor
+
+    player_One.room = room
+
+
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'equip') and (fcommand_list[1] == 'armor') or (fcommand_list[1] == 'jacket'):
+            print ('You equip the leather jacket.')
+            player_One.worn = 'leather'
+            player_Armor.value = 3
+        else:
+            print ('You can\'t do that here.')
+    if (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
+            room = 16
 
 #---------------------------------------------------------------------------
 #
-# Room 18
+# Room 18. This is an abondonned convenience store. The player will find few
+# clues here about what happened.
 #
 #----------------------------------------------------------------------------
 def parse_room18 (fcommand_list):
 
-    pass
+        global player_One
+        global room
+        player_One.room = room
 
-#---------------------------------------------------------------------------
+        if (len(fcommand_list) >= 4):
+            print ('Commands can be no more than 3 words.')
+            return
+        elif (len(fcommand_list) == 3):
+            print ('You can\'t do that here.')
+        elif (len(fcommand_list) == 2):
+            print ('You can\'t do that here.')
+        elif (len(fcommand_list) == 1):
+            if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+                room = 16
+
+
+#----------------------------------------------------------------------------
 #
-# Room 19
+#  This is the abandonned motorcycle shop. There is a an exit to the southern
+# and a leather jacket the player can find here.
 #
 #----------------------------------------------------------------------------
 def parse_room19 (fcommand_list):
 
-    pass
+    global player_One
+    global room
+    player_One.room = room
 
-#---------------------------------------------------------------------------
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You ca(n\'t do that here.')
+    if (len(fcommand_list) == 2):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
+            room = 20
+            return
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 16
+            return
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 21
+            return
+
+
+#----------------------------------------------------------------------------
 #
-# Room 20
+#  This is the abandonned motorcycle shop. There is a an exit to the southern
+# and a leather jacket the player can find here.
 #
-#---------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 def parse_room20 (fcommand_list):
 
-    pass
+    global player_One
+    global room
+    player_One.room = room
+
+    if (len(fcommand_list) >= 4):
+        print ('Command can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'read') and (fcommand_list[1] == 'clippings'):
+            display_news()
+        else:
+            print ("You can\'t do that here.")
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 19
+            return
+
+
+
+
 
 #---------------------------------------------------------------------------
 #
-# Room 21
+# Room 21: Allway way through the street
 #
 #---------------------------------------------------------------------------
 def parse_room21 (fcommand_list):
 
-    pass
+    global player_One
+    global room
+    player_One.room = room
+
+    if (len(fcommand_list) >= 4):
+        print ('Command can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'read') and (fcommand_list[1] == 'clippings'):
+            display_news()
+        else:
+            print ("You can\'t do that here.")
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 19
+            return
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
+            room = 22
+            return
+        if (fcommand_list[0] == 'nw') or (fcommand_list[0] == 'NW') or (fcommand_list[0] == 'northwest'):
+            room = 23
+            return
+        if (fcommand_list[0] == 'sw') or (fcommand_list[0] == 'SW') or (fcommand_list[0] == 'southwest'):
+            room = 24
+            return
+
 
 #---------------------------------------------------------------------------
 #
-# Room 22
+#  This is an abaondnned house that willl advence the background for the game_
+# a little bit futher.  The player will found out what the citizens planned
+# to do to her father and why he might have been driven to such extremes.
 #
 #---------------------------------------------------------------------------
 def parse_room22 (fcommand_list):
+    global player_One
+    global room
+    player_One.room = room
 
-    pass
+    if (len(fcommand_list) >= 4):
+        print ('Command can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'read') and (fcommand_list[1] == 'clippings'):
+            display_news()
+        else:
+            print ("You can\'t do that here.")
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 19
+            return
 
 #---------------------------------------------------------------------------
 #
@@ -1394,17 +1686,58 @@ def parse_room22 (fcommand_list):
 #
 #---------------------------------------------------------------------------
 def parse_room23 (fcommand_list):
+    global player_One
+    global room
+    player_One.room = room
 
-    pass
+
+    if (len(fcommand_list) >= 4):
+        print ('Command can be no longer than three words.')
+    if (len(fcommand_list) == 3):
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        print ("You can\'t do that here.")
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'se') or (fcommand_list[0] == 'SE') or (fcommand_list[0] == 'southest'):
+            room = 21
+            return
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 25
+            return
+
 
 #---------------------------------------------------------------------------
 #
-# Room 24
+# Room 24.This is the lab of the player's father. There is a trap trapdoor
+# leading to his underground base of operations. it has been overrun
+# by victims of the virus he has engineered.
 #
 #---------------------------------------------------------------------------
 def parse_room24 (fcommand_list):
+    global player_One
+    global room
+    player_One.room = room
 
-    pass
+
+    if (len(fcommand_list) >= 4):
+        print ('Command can be no longer than three words.')
+    if (len(fcommand_list) == 3)
+        print ('You can\'t do that here.')
+    if (len(fcommand_list) == 2):
+        if (fcommand_list[0] == 'open') and (fcommand_list[2] == 'door'):
+            print ('You open the trap door and climb down. You make sure')
+            print ('to close and lock the trap door behind you as you asend.')
+            room = 26
+            return
+        else:
+            print ("You can\'t do that here.")
+    elif (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'ne') or (fcommand_list[0] == 'NE') or (fcommand_list[0] == 'northeast'):
+            room = 21
+            return
+
+            return
+
 
 
 #---------------------------------------------------------------------------
@@ -1439,7 +1772,7 @@ def game_start (sg_godmode):
 
     while inGame:
         player_One.room = room
-        display_room (room, inGame)
+        display_room (room, inGame, sg_godmode)
 
         print ("")
         print (">", end='')
@@ -1503,7 +1836,7 @@ def game_start (sg_godmode):
             elif room == 16:
                 parse_room16 (command_list)
             elif room == 17:
-                paarse_room17 (command_list)
+                parse_room17 (command_list)
             elif room == 18:
                 parse_room18 (command_list)
             elif room == 19:
