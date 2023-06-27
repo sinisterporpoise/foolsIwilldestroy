@@ -101,6 +101,7 @@ class player:
          self.ratbeaten = False
          self.puzzle_solved = False
          self.dog_beaten = False
+         self.rabid_beaten = False
          self.room = 1
 
 
@@ -285,7 +286,24 @@ def rat_battle (god_mode):
             player_One.ratbeaten = True
             player_One.htipoints = 10
             return
+#------------------------------------------------------------------------------
+#
+# To elp compartmnetalize this further, we're just going to get an armor values
+#
+#------------------------------------------------------------------------------
+def determine_Amor_Value (fplayer_One):
+    global player_Armor
 
+    if player_One.worn == 'None':
+        player_Armor.value = 1
+    if fplayer_One.worn == 'cloth':
+        player_Armor.value = 2
+    if fplayer_One.worn == 'leather':
+        player_Armor.value = 3
+    if fplayer_One.worn == 'steel':
+        player_Armor.value = 4
+    if fplayer_One.worn == 'kevlar':
+        player_Armor.value = 5
 #------------------------------------------------------------------------------
 #
 # This is a simple function that will handle all the battles in this game_
@@ -302,31 +320,45 @@ def handle_battle (monster_type, sg_godmode):
             self.armor = armor
             self.resistance = resistance
 
-
+    #Monster Objects
     dog = Monster(3, 10, 2, 'water')
+    rabid = Monster(4, 12, 3, 'earth')
+
+    #Weapon Objects
     knife = Weapon('slashing', 3, None, 0)
     sword = Weapon('slashing', 6, None, 'fire')
 
     global player_One
-    global player_Armor
 
     player_One.htipoints = 10
     damage = 0
     monster_damage = 0
     player_damage = 0
+
+    # Determine monste rdamage and Armor
+
     if monster_type == 'dog':
         monster_hitpoints = dog.hitpoints
         monster_Armor  = dog.armor
+    elif monster_type == rabid:
+        monster_itpoints = rabid.hitpoints
+        monster_Armor = rabid.armor
+    elif monster_type == 'father':
+        pass
 
-
+    player_armor = 0
+    player_armor = determine_Amor_Value (player_One)
     if (sg_godmode == True):
         print (f'The {monster_type} dies in the presence of an obvious god.')
         if (monster_type == 'dog'):
             player_One.dog_beaten = True
+        if (monster_type == 'rabid'):
+            player_One.rabid_beaten = True
         return
 
 
     while (player_One.hitpoints > 0) or (monster_hitpoints > 0):
+        print (player_armor)
         initiative = random.randint(0,1) + 1
         player_hit_chance = random.randint(0,100)
         monster_hit_chance = random.randint(0,100)
@@ -369,7 +401,7 @@ def handle_battle (monster_type, sg_godmode):
 
             if (monster_hit_chance <= 65):
                 if monster_type == 'dog':
-                    monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+                    monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.val
 
                 if (monster_damage > 0):
                     print (f'The {monster_type} hits you for {monster_damage}')
@@ -387,7 +419,9 @@ def handle_battle (monster_type, sg_godmode):
                     player_damage = knife.swing() - monster_Armor
                 if player_One.equip == 'sword':
                     player_damage = sword.swing() - monster_Armor
-
+                if player_One.equip == 'gun':
+                    #player_damage = gun.swing      """ Yes, this iw rong """
+                    pass
                 if (player_damage > 0):
                     print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip}')
                     monster_hitpoints -= player_damage
@@ -597,7 +631,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
     global player_One
     # Your father's lab
     player_One.room = gd_room
-
+    print (gd_room)
     if gd_room == 1:
         print ('1. This is your father\'s genetics engineering lab. In the ')
         print ('corner of the room there is a living pet dinosaur that he')
@@ -864,7 +898,56 @@ def display_room (gd_room, gd_inGame, sg_godmode):
     # Hehe, we finally spring the rabid human on the player.
     # Good thing they've been vaccinated/
     if gd_room == 25:
+        print ("This is -- or rather was a -- a dead end street. It is")
+        print ('slowly being reclaimed by the scrublands, desert, or whatever')
+        print ('the climate of this area has become.')
+        print ('')
+        if player_One.rabid_beadn == False:
+            print ('There is a lone figure standing here.  You glance at the')
+            print ('footprints quickly and realize that the person is foaming')
+            print ('at the mouth. You realize your father was sucessful in')
+            print ('altering the virus. You also realize that you are about')
+            print ('to be attacked as you ready your sword.')
+
+    if (gd_room >= 26) and (gd_room % 3 == 0):
+         print ('This is a once sterile hallway leading through the underground')
+         print ('labs where your father worked. The flourescent lights remain on')
+         print ('but they still flicker overhead.')
+         print ('')
+         if (gd_room == 27) or (gd_room == 28):
+            if (gd_room < 27) or (gd_room < 48):
+                print ('There are obvious exits to the north, south, east, west')
+            elif (gd_room == 27):
+                 print ('There are exites to the north, south, and west')
+            elif (gd_room == 28):
+                 print ('There are exits to the north, south and east')
+    if (gd_room >= 26) and (gd_room % 3 == 2):
+        print ('This appears to be a lab that someone kept meticulously')
+        print ('clean at one point. It has since fallen into disuse')
+        print ('and the shelves have gotten dusty.')
+        print ('')
+        if (gd_room == 26):
+            print ('There is a trapdoor above you.')
+            print ('')
+        print ('There is an obvious exit to the south.')
+    if (gd_room >= 26) and (gd_room <= 49) (gd_room % 3 == 1):
+        print ('These labs are similar to the ones to the north, but they')
+        print ('show signs of recent use.  Someone has made an attempt to')
+        print ('maintain and repair the equipment even when supplies are short')
+        print ('There is a whiteboard with what appear to be indecipherable')
+        print ('chemical problems on the board.')
+        print ('')
+        if (gd_room == 49):
+            print ('There are obvious exists to the north and west.')
+        else:
+            print ('There is an obvious exit to the north')
+
+
+
+
+    if gd_room == 50:
         pass
+
 
     return
 
@@ -1074,7 +1157,7 @@ def parse_room3 (fcommand_list):
     if (len(fcommand_list) == 2):
         if (fcommand_list[command] == 'equip') and (fcommand_list[command+1] == 'cloth'):
             print ('You put the cloth suit on.')
-            player_One.worn = 'coth'
+            player_One.worn = 'cloth'
     if (len(fcommand_list) == 1):
         if (fcommand_list[command] == 'w') or (fcommand_list[command] == 'W') or (fcommand_list[command] == 'west'):
             room = 2
@@ -1613,7 +1696,6 @@ def parse_room20 (fcommand_list):
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 19
-            return
 
 
 
@@ -1634,24 +1716,16 @@ def parse_room21 (fcommand_list):
         print ('Command can be no longer than three words.')
     if (len(fcommand_list) == 3):
         print ('You can\'t do that here.')
-    if (len(fcommand_list) == 2):
-        if (fcommand_list[0] == 'read') and (fcommand_list[1] == 'clippings'):
-            display_news()
-        else:
-            print ("You can\'t do that here.")
-    elif (len(fcommand_list) == 1):
+    if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
             room = 19
-            return
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 22
-            return
         if (fcommand_list[0] == 'nw') or (fcommand_list[0] == 'NW') or (fcommand_list[0] == 'northwest'):
             room = 23
-            return
         if (fcommand_list[0] == 'sw') or (fcommand_list[0] == 'SW') or (fcommand_list[0] == 'southwest'):
             room = 24
-            return
+
 
 
 #---------------------------------------------------------------------------
@@ -1677,7 +1751,7 @@ def parse_room22 (fcommand_list):
             print ("You can\'t do that here.")
     elif (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
-            room = 19
+            room = 21
             return
 
 #---------------------------------------------------------------------------
@@ -1721,7 +1795,7 @@ def parse_room24 (fcommand_list):
 
     if (len(fcommand_list) >= 4):
         print ('Command can be no longer than three words.')
-    if (len(fcommand_list) == 3)
+    if (len(fcommand_list) == 3):
         print ('You can\'t do that here.')
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'open') and (fcommand_list[2] == 'door'):
@@ -1731,12 +1805,15 @@ def parse_room24 (fcommand_list):
             return
         else:
             print ("You can\'t do that here.")
-    elif (len(fcommand_list) == 1):
+
+
+    if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'ne') or (fcommand_list[0] == 'NE') or (fcommand_list[0] == 'northeast'):
             room = 21
             return
 
             return
+
 
 
 
@@ -1746,9 +1823,236 @@ def parse_room24 (fcommand_list):
 #
 #----------------------------------------------------------------------------
 def parse_room25 (command_list):
+    global player_One
+    global room
+    player_One.room = room
+    if (len(fcommand_list) >= 4):
+        print ('Commands can be no longer than three words.')
+    if (len(fcommand_list) == 3) or (len(fcommand_list) == 2):
+        print ('You can\'t do that here')
+    if (len(fcommand_list) == 1):
+        if (fcommand_list[0] == 'se') or (fcommand_list[0] == 'SE') or (fcommand_list[0] == 'southeast'):
+            room = 21
 
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room26 (fcommand_list):
     pass
 
+
+#----------------------------------------------------------------------------
+#
+# Room 27
+#
+#-----------------------------------------------------------------------------
+def parse_room27 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 28
+#
+#-----------------------------------------------------------------------------
+def parse_room28 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 29
+#
+#-----------------------------------------------------------------------------
+def parse_room29 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 30
+#
+#-----------------------------------------------------------------------------
+def parse_room30 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 31
+#
+#-----------------------------------------------------------------------------
+def parse_room31 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 32
+#
+#-----------------------------------------------------------------------------
+def parse_room32 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 33
+#
+#-----------------------------------------------------------------------------
+def parse_room33 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room34 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 35
+#
+#-----------------------------------------------------------------------------
+def parse_room35 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 36
+#
+#-----------------------------------------------------------------------------
+def parse_room36 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 37
+#
+#-----------------------------------------------------------------------------
+def parse_room37 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 38
+#
+#-----------------------------------------------------------------------------
+def parse_room38 (fcommand_list):
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 39
+#
+#-----------------------------------------------------------------------------
+def parse_room39 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room40 (fcommand_list):
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 41
+#
+#-----------------------------------------------------------------------------
+def parse_room41 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room42 (fcommand_list):
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 43
+#
+#-----------------------------------------------------------------------------
+def parse_room43 (fcommand_list):
+    pass
+
+#----------------------------------------------------------------------------
+#
+# Room 44
+#
+#-----------------------------------------------------------------------------
+def parse_room44 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 45
+#
+#-----------------------------------------------------------------------------
+def parse_room45 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 46
+#
+#-----------------------------------------------------------------------------
+def parse_room46 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 47
+#
+#-----------------------------------------------------------------------------
+def parse_room47 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room48 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 49
+#
+#-----------------------------------------------------------------------------
+def parse_room49 (fcommand_list):
+    pass
+
+
+#----------------------------------------------------------------------------
+#
+# Room 26
+#
+#-----------------------------------------------------------------------------
+def parse_room50 (fcommand_list):
+    pass
 #----------------------------------------------------------------------------
 #
 # In this function, we contian the gme control loop that will load the first
@@ -1789,7 +2093,6 @@ def game_start (sg_godmode):
 
 
         print ('Debugging', command_list)
-        print (f'Room: {room}')
 
 
         if (command_list[0] == 'quit') or (command_list[0] == 'exit'):
@@ -1844,7 +2147,7 @@ def game_start (sg_godmode):
             elif room == 20:
                 parse_room20 (command_list)
             elif room == 21:
-                parse_room22 (command_list)
+                parse_room21 (command_list)
             elif room == 22:
                 parse_room22 (command_list)
             elif room == 23:
@@ -1853,7 +2156,56 @@ def game_start (sg_godmode):
                 parse_room24 (command_list)
             elif room == 25:
                 parse_room25 (command_list)
-
+            elif room == 26:
+                parse_room26 (command_list)
+            elif room == 27:
+                parse_room27 (command_list)
+            elif room == 28:
+                parse_room28 (command_list)
+            elif room == 29:
+                parse_room29 (command_list)
+            elif room == 30:
+                parse_room30 (command_list)
+            elif rooom == 31:
+                parse_room31 (command_ist)
+            elif room == 32:
+                parse_room32 (command_list)
+            elif room == 33:
+                parse_room33 (command_list)
+            elif room == 34:
+                parse_room34 (command_list)
+            elif room == 35:
+                parse_room35 (command_list)
+            elif room == 36:
+                parse_room36 (command_list)
+            elif room == 37:
+                parse_room37 (command_list)
+            elif room == 38:
+                parse_room38 (command_list)
+            elif room == 39:
+                parse_room39 (command_list)
+            elif room == 40:
+                parse_room40 (command_list)
+            elif room == 41:
+                parse_room41 (command_list)
+            elif room == 42:
+                parse_room42 (command_list)
+            elif room == 43:
+                pasrse_room43 (command_list)
+            elif room == 44:
+                parse_room44 (command_list)
+            elif room == 45:
+                parse_room45(command_list)
+            elif room == 46:
+                parse_room46 (command_list)
+            elif room == 47:
+                parse_room47 (command_list)
+            elif room == 48:
+                parse_room48 (command_list)
+            elif room == 49:
+                parse_room49 (command_list)
+            elif room == 50:
+                parse_room50 (command_list)
         else:
             print ('Syntax error')
 
