@@ -943,7 +943,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
 
     if (gd_room == 49):
             print ('There are obvious exists to the north and west.')
-        else:
+    else:
             print ('There is an obvious exit to the north')
 
 
@@ -1857,7 +1857,7 @@ def parse_room26 (fcommand_list):
     if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
         pass
     if (len(fcommand_lis) == 1):
-        if (fcommand_list == 's') or (fcommand_list == 'south') or (fcommand_list == 'S'):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
             room = 27
 
 
@@ -1870,6 +1870,20 @@ def parse_room27 (fcommand_list):
     global player_One
     global room
 
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 28
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 26
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 30
    
 
 
@@ -1891,7 +1905,7 @@ def parse_room28 (fcommand_list):
     if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
         pass
     if (len(fcommand_lis) == 1):
-        if (fcommand_list == 'n') or (fcommand_list == 'north') or (fcommand_list == 'N'):
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'north') or (fcommand_list[0] == 'N'):
             room = 27
 
 
@@ -1928,6 +1942,23 @@ def parse_room30 (fcommand_list):
     global player_One
     global room
 
+
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 29
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 31
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 33
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 27
 
 #----------------------------------------------------------------------------
 #
@@ -1981,6 +2012,24 @@ def parse_room33 (fcommand_list):
     global player_One
     global room
 
+
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 34
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 32
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 36
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 30
+
      
 
 #----------------------------------------------------------------------------
@@ -2033,6 +2082,24 @@ def parse_room35 (fcommand_list):
 def parse_room36 (fcommand_list):
     global player_One
     global room
+
+
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 37
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 35
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 39
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 33
 
 
 
@@ -2091,6 +2158,23 @@ def parse_room39 (fcommand_list):
     global player_One
     global room
 
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 40
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 38
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 42
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 36
+
 
 #----------------------------------------------------------------------------
 #
@@ -2142,6 +2226,24 @@ def parse_room42 (fcommand_list):
     global player_One
     global room
 
+
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 29
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 31
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 33
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 27
+
 #----------------------------------------------------------------------------
 #
 # Room 43
@@ -2171,16 +2273,17 @@ def parse_room44 (fcommand_list):
     global player_One
     global room
 
-     if (len(fcommand_list) > 3):
+    if (len(fcommand_list) > 3):
         return
     if (len(fcommand_list) == 3):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
             pass
     if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
         pass
-    if (len(fcommand_lis) == 1):
+    if (len(fcommand_list) == 1):
         if (fcommand_list == 's') or (fcommand_list == 'south') or (fcommand_list == 'S'):
             room = 45
+
 
 
 
@@ -2189,9 +2292,28 @@ def parse_room44 (fcommand_list):
 # Room 45
 #
 #-----------------------------------------------------------------------------
+
 def parse_room45 (fcommand_list):
     global player_One
     global room
+
+
+    if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 44
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 46
+        if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
+            room = 42
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 48
 
 
 #----------------------------------------------------------------------------
@@ -2242,7 +2364,24 @@ def parse_room47 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room48 (fcommand_list):
-    pass
+    global player_One
+    global room
+
+
+     if (len(fcommand_list) > 3):
+        return
+    if (len(fcommand_list) == 3):
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            pass
+    if (len_fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+        pass
+    if (len(fcommand_lis) == 1):
+        if (fcommand_list[0] == 's') or (fcommand_list[0] == 'south') or (fcommand_list[0] == 'S'):
+            room = 47
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
+            room = 48
+        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+            room = 45
 
 
 #----------------------------------------------------------------------------
