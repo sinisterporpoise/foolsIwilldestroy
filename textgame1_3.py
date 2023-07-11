@@ -1823,7 +1823,8 @@ def parse_room24 (fcommand_list):
 
 #---------------------------------------------------------------------------
 #
-# Room 25
+# This is the last room on the surface. There are some underground labs 
+# underneath.
 #
 #----------------------------------------------------------------------------
 def parse_room25 (command_list):
@@ -1840,11 +1841,17 @@ def parse_room25 (command_list):
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# This is the first room in the undergound earea.
 #
 #-----------------------------------------------------------------------------
 def parse_room26 (fcommand_list):
-    pass
+
+    global player_One
+    global room
+
+    if (len(fcommand_list) > 3):
+        return
+    if (l)
 
 
 #----------------------------------------------------------------------------
@@ -1853,7 +1860,10 @@ def parse_room26 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room27 (fcommand_list):
-    pass
+    global player_One
+    global room
+
+   
 
 
 #----------------------------------------------------------------------------
@@ -1862,7 +1872,9 @@ def parse_room27 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room28 (fcommand_list):
-    pass
+    
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1871,7 +1883,8 @@ def parse_room28 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room29 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1880,7 +1893,8 @@ def parse_room29 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room30 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1889,7 +1903,8 @@ def parse_room30 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room31 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1898,7 +1913,8 @@ def parse_room31 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room32 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1907,16 +1923,18 @@ def parse_room32 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room33 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# Room 34
 #
 #-----------------------------------------------------------------------------
 def parse_room34 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1925,7 +1943,8 @@ def parse_room34 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room35 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1934,7 +1953,8 @@ def parse_room35 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room36 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1943,7 +1963,8 @@ def parse_room36 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room37 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -1952,7 +1973,8 @@ def parse_room37 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room38 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 #----------------------------------------------------------------------------
 #
@@ -1960,16 +1982,18 @@ def parse_room38 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room39 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# Room 40
 #
 #-----------------------------------------------------------------------------
 def parse_room40 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 #----------------------------------------------------------------------------
 #
@@ -1977,16 +2001,18 @@ def parse_room40 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room41 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# Room 42
 #
 #-----------------------------------------------------------------------------
 def parse_room42 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 #----------------------------------------------------------------------------
 #
@@ -1994,7 +2020,8 @@ def parse_room42 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room43 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 #----------------------------------------------------------------------------
 #
@@ -2002,7 +2029,8 @@ def parse_room43 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room44 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -2011,7 +2039,8 @@ def parse_room44 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room45 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -2020,7 +2049,8 @@ def parse_room45 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room46 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
@@ -2029,12 +2059,13 @@ def parse_room46 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room47 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# Room 48
 #
 #-----------------------------------------------------------------------------
 def parse_room48 (fcommand_list):
@@ -2047,16 +2078,22 @@ def parse_room48 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room49 (fcommand_list):
-    pass
+    global player_One
+    global room
 
 
 #----------------------------------------------------------------------------
 #
-# Room 26
+# This is the room where the player will encounter their father who has 
+# fully succumbed to the virus he created. There is little choice but to 
+# end his misery.
 #
 #-----------------------------------------------------------------------------
 def parse_room50 (fcommand_list):
-    pass
+     global player_One
+     global room
+
+
 #----------------------------------------------------------------------------
 #
 # In this function, we contian the gme control loop that will load the first
