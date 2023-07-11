@@ -914,12 +914,15 @@ def display_room (gd_room, gd_inGame, sg_godmode):
          print ('labs where your father worked. The flourescent lights remain on')
          print ('but they still flicker overhead.')
          print ('')
+         if (gd_room == 48):
+             print ('There are obvious exits to the north, south, and east')
+             return
          if (gd_room == 27) or (gd_room == 28):
             if (gd_room < 27) or (gd_room < 48):
                 print ('There are obvious exits to the north, south, east, west')
             elif (gd_room == 27):
                  print ('There are exites to the north, south, and west')
-            elif (gd_room == 28):
+            elif (gd_room == 48):
                  print ('There are exits to the north, south and east')
     if (gd_room >= 26) and (gd_room % 3 == 2):
         print ('This appears to be a lab that someone kept meticulously')
@@ -937,7 +940,8 @@ def display_room (gd_room, gd_inGame, sg_godmode):
         print ('There is a whiteboard with what appear to be indecipherable')
         print ('chemical problems on the board.')
         print ('')
-        if (gd_room == 49):
+
+    if (gd_room == 49):
             print ('There are obvious exists to the north and west.')
         else:
             print ('There is an obvious exit to the north')
