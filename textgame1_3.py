@@ -304,6 +304,38 @@ def determine_Amor_Value (fplayer_One):
         player_Armor.value = 4
     if fplayer_One.worn == 'Kevlar':
         player_Armor.value = 5
+
+#------------------------------------------------------------------------------
+#
+# The player got here by using the search here or search area command, whichever
+# one I hard code into the game. This will give them a chance of finding a
+# useful random item to help them finish the game.
+#
+#------------------------------------------------------------------------------
+def search_area ():
+    global player_One
+    loot_chance = random.randInt(0,10)+1
+
+
+    if (loot_chance >= 9):
+        print ('You rummage around the area and find nothing.')
+        return
+
+    if (loot_chance == 10):
+        if (player_One.worn != 'steel') and (player_One.equip != 'gun'):
+            found = random.randInt(0,2)
+            if (found == 0) and (player_One.equip != "gun"):
+                print ('You find a Glock 9mm.')
+                print ('You equip the gun.')
+                player_One.equip = "gun"
+                return
+
+            if (found == 1) and (player_One.worn != 'steel'):
+                print ('You find a steel chestplate.')
+                print ('You equip the steel chestplate.')
+                player_One.worn = 'steel'
+                return
+                
 #------------------------------------------------------------------------------
 #
 # This is a simple function that will handle all the battles in this game_
@@ -953,14 +985,13 @@ def display_room (gd_room, gd_inGame, sg_godmode):
          if (gd_room == 48):
              print ('There are obvious exits to the north, south, and east')
              return
-         if (gd_room == 27) or (gd_room == 28):
+         if (gd_room == 27):
+             print ('There are obvious exits to the north, south, and wast')
+             return
+         if (gd_room > 27) or (gd_room < 48):
             if (gd_room < 27) or (gd_room < 48):
                 print ('There are obvious exits to the north, south, east, west')
-            elif (gd_room == 27):
-                 print ('There are exites to the north, south, and west')
-            elif (gd_room == 48):
-                 print ('There are exits to the north, south and east')
-
+                return
 
     if (gd_room >= 26) and (gd_room % 3 == 2):
         print ('This appears to be a lab that someone kept meticulously')
@@ -971,7 +1002,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
             print ('There is a trapdoor above you.')
             print ('')
         print ('There is an obvious exit to the south.')
-
+        return
 
     if (gd_room >= 26) and (gd_room <= 49) and (gd_room % 3 == 1):
         print ('These labs are similar to the ones to the north, but they')
@@ -980,9 +1011,12 @@ def display_room (gd_room, gd_inGame, sg_godmode):
         print ('There is a whiteboard with what appear to be indecipherable')
         print ('chemical problems on the board.')
         print ('')
+        print ('There is an obvious exit to the North.')
+        return
 
     if (gd_room == 49):
             print ('There are obvious exists to the north and west.')
+            return
 
 
 
@@ -2125,11 +2159,11 @@ def parse_room35 (fcommand_list):
 #-----------------------------------------------------------------------------
 def parse_room36 (fcommand_list):
     global player_One
-    global rooms
+    global room
     player_One.room = room
 
 
-    if (len(fcommand_list == 3)):
+    if (len(fcommand_list) == 3):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
             pass
     if (len(fcommand_list) == 2):
@@ -2139,9 +2173,9 @@ def parse_room36 (fcommand_list):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 35
         if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
-            room = 30
+            room = 33
         if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
-            room = 36
+            room = 39
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 37
 
@@ -2216,7 +2250,7 @@ def parse_room39 (fcommand_list):
         if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
             room = 42
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
-            room = 41
+            room = 40
 
 
 #----------------------------------------------------------------------------
@@ -2270,7 +2304,7 @@ def parse_room42 (fcommand_list):
     player_One.room = room
 
 
-    if (len(fcommand_list == 3)):
+    if (len(fcommand_list) == 3):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
             pass
     if (len(fcommand_list) == 2):
@@ -2346,13 +2380,13 @@ def parse_room45 (fcommand_list):
             pass
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
-            room = 42
+            room = 44
         if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
             room = 42
         if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'W') or (fcommand_list[0] == 'west'):
             room = 48
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
-            room = 44
+            room = 46
 
 
 #----------------------------------------------------------------------------
@@ -2449,15 +2483,17 @@ def parse_room49 (fcommand_list):
         if (fcommand_list[0] == 'w') or (fcommand_list[0] == 'w') or (fcommand_list[0] == 'w'):
             answer = ""
             print ('')
-            print('----------------------------------------------------------')
+            print('------------------------------------------------------------------')
             print ('The door to the west will close and lock behind you and')
             print ('you will be unable to come back. Do you wish  to proceed (Y/N)?')
+            print ('-----------------------------------------------------------------')
             answer = input()
             answer = answer.upper()
             if (answer == 'Y'):
                 room = 50
-        if (fcommand_list[0] == 'e') or (fcommand_list[0] == 'E') or (fcommand_list[0] == 'east'):
+        if (fcommand_list[0] == 'n') or (fcommand_list[0] == ' n') or (fcommand_list[0] == 'north'):
             room = 48
+
 
 #----------------------------------------------------------------------------
 #
@@ -2577,8 +2613,8 @@ def game_start (sg_godmode):
                 parse_room29 (command_list)
             elif room == 30:
                 parse_room30 (command_list)
-            elif rooom == 31:
-                parse_room31 (command_ist)
+            elif room == 31:
+                parse_room31 (command_list)
             elif room == 32:
                 parse_room32 (command_list)
             elif room == 33:
@@ -2602,7 +2638,7 @@ def game_start (sg_godmode):
             elif room == 42:
                 parse_room42 (command_list)
             elif room == 43:
-                pasrse_room43 (command_list)
+                parse_room43 (command_list)
             elif room == 44:
                 parse_room44 (command_list)
             elif room == 45:
