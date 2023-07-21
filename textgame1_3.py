@@ -314,28 +314,30 @@ def determine_Amor_Value (fplayer_One):
 #------------------------------------------------------------------------------
 def search_area ():
     global player_One
-    loot_chance = random.randInt(0,10)+1
+    loot_chance = random.randint(0,10)
 
 
-    if (loot_chance >= 9):
+    if (loot_chance <= 8):
         print ('You rummage around the area and find nothing.')
         return
 
-    if (loot_chance == 10):
+    if (loot_chance >= 9):
         if (player_One.worn != 'steel') and (player_One.equip != 'gun'):
-            found = random.randInt(0,2)
-            if (found == 0) and (player_One.equip != "gun"):
-                print ('You find a Glock 9mm.')
-                print ('You equip the gun.')
-                player_One.equip = "gun"
-                return
+            found = random.randint(0,1)
+            print (f'Found: {found}')
+            if (found == 0) and (player_One.equip != "gun") or (found == 1) and (player_One.worn != 'steel'):
+                if found == 0:
+                    print ('You find a Glock 9mm.')
+                    print ('You equip the gun.')
+                    player_One.equip = "gun"
+                    return
 
-            if (found == 1) and (player_One.worn != 'steel'):
-                print ('You find a steel chestplate.')
-                print ('You equip the steel chestplate.')
-                player_One.worn = 'steel'
-                return
-                
+                if found == 1:
+                    print ('You find a steel chestplate.')
+                    print ('You equip the steel chestplate)')
+                    return
+
+
 #------------------------------------------------------------------------------
 #
 # This is a simple function that will handle all the battles in this game_
@@ -355,10 +357,12 @@ def handle_battle (monster_type, sg_godmode):
     #Monster Objects
     dog = Monster(3, 10, 2, 'water')
     rabid = Monster(4, 12, 3, 'earth')
+    rat = Monster (2,10,1, None)
+    father = Monster(6,16,4, 'fire')
 
     #Weapon Objects
     knife = Weapon('slashing', 3, None, 0)
-    sword = Weapon('slashing', 6, None, 'fire')
+    sword = Weapon('slashing', 6, x)
 
     global player_One
 
@@ -375,8 +379,10 @@ def handle_battle (monster_type, sg_godmode):
     elif monster_type == 'rabid':
         monster_hitpoints = rabid.hitpoints
         monster_Armor = rabid.armor
+    elif monster_type == 'rat':
+        monster_hitpoints = rat.hitpoints
     elif monster_type == 'father':
-        pass
+        monster_hitpoints = father.hitpoints
 
     player_armor = 0
     player_armor = determine_Amor_Value (player_One)
@@ -1004,7 +1010,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
         print ('There is an obvious exit to the south.')
         return
 
-    if (gd_room >= 26) and (gd_room <= 49) and (gd_room % 3 == 1):
+    if (gd_room >= 26) and (gd_room < 49) and (gd_room % 3 == 1):
         print ('These labs are similar to the ones to the north, but they')
         print ('show signs of recent use.  Someone has made an attempt to')
         print ('maintain and repair the equipment even when supplies are short')
@@ -1015,6 +1021,11 @@ def display_room (gd_room, gd_inGame, sg_godmode):
         return
 
     if (gd_room == 49):
+            print ('This room seems to have seen recent use. There is a suit')
+            print ('of kevlar body armor lying on one of the tables.  You can')
+            print ('hear something that sounds like your father mumbling to')
+            print ('himself off to the west.')
+            print ('')
             print ('There are obvious exists to the north and west.')
             return
 
@@ -1921,11 +1932,11 @@ def parse_room26 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
         if (fcommand_list[0] == 'close') and (fcommand_list[1] == 'door') or (fcommand_list[1] == 'trapdor'):
             print ('The door will not budge')
         if (fcommand_list[0] ==  'open') and (fcommand_list[1] == 'door') or (fcommand_list[1] == 'trapdoor'):
@@ -1948,11 +1959,11 @@ def parse_room27 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
             room = 26
@@ -1975,11 +1986,11 @@ def parse_room28 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 27
@@ -1995,10 +2006,11 @@ def parse_room29 (fcommand_list):
     player_One.room = room
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 30
@@ -2018,11 +2030,11 @@ def parse_room30 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 29
@@ -2047,11 +2059,11 @@ def parse_room31 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 30
@@ -2069,10 +2081,11 @@ def parse_room32 (fcommand_list):
     player_One.room = room
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list[0] == 'south'):
             room = 33
@@ -2090,11 +2103,11 @@ def parse_room33 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 32
@@ -2120,11 +2133,11 @@ def parse_room34 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
             room = 33
@@ -2143,10 +2156,11 @@ def parse_room35 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
             room = 36
@@ -2164,11 +2178,11 @@ def parse_room36 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 35
@@ -2194,11 +2208,11 @@ def parse_room37 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
             room = 36
@@ -2217,10 +2231,11 @@ def parse_room38 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
             room = 39
@@ -2237,11 +2252,11 @@ def parse_room39 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 38
@@ -2265,11 +2280,11 @@ def parse_room40 (fcommand_list):
     if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
             room = 39
@@ -2284,10 +2299,11 @@ def parse_room41 (fcommand_list):
     global room
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
             room = 42
@@ -2305,11 +2321,11 @@ def parse_room42 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 41
@@ -2333,14 +2349,14 @@ def parse_room43 (fcommand_list):
             if (len(fcommand_list) > 3):
                 print ("Commands can be no longer than 3 words.")
             if (len(fcommand_list) == 3):
-                if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-                    pass
+                if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+                    search_area()
             if (len(fcommand_list) == 2):
-                if (fcommand_list[0] == 'search') and (fcommand_lLenist[1] == 'area'):
-                    pass
+                if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+                    search_area()
             if (len(fcommand_list) == 1):
                 if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
-                    room = 27
+                    room = 42
 
 #----------------------------------------------------------------------------
 #
@@ -2352,10 +2368,11 @@ def parse_room44 (fcommand_list):
     global room
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
             room = 45
@@ -2373,11 +2390,11 @@ def parse_room45 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 44
@@ -2398,14 +2415,14 @@ def parse_room46 (fcommand_list):
     global room
     global player_One
 
-    if (Len(fcommand_list) > 3):
+    if (len(fcommand_list) > 3):
         print ("Commands can be no longer than 3 words.")
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list == 'north'):
             room = 45
@@ -2421,10 +2438,11 @@ def parse_room47 (fcommand_list):
     global room
 
     if (len(fcommand_list) == 3):
-        print ('You can\'t do that here.')
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
-        if (command_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 's') or (fcommand_list[0] == 'S') or (fcommand_list == 'south'):
             room = 48
@@ -2442,11 +2460,11 @@ def parse_room48 (fcommand_list):
 
 
     if (len(fcommand_list) == 3):
-        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommnad_list[2] == 'area'):
-            pass
+        if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'the') and (fcommand_list[2] == 'area'):
+            search_area()
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
-            pass
+            search_area()
     if (len(fcommand_list) == 1):
         if (fcommand_list[0] == 'n') or (fcommand_list[0] == 'N') or (fcommand_list[0] == 'north'):
             room = 47
@@ -2502,6 +2520,20 @@ def parse_room49 (fcommand_list):
 #-----------------------------------------------------------------------------
 def parse_room50 (fcommand_list):
     pass
+
+#----------------------------------------------------------------------------
+#  In rooms 26 through 48, the player has a chance to encounter a random
+# creature.
+#-----------------------------------------------------------------------------
+def random_encounter()
+
+
+    monster_types = ['rat', 'dob', 'rabid']
+    monster_type = random.choice(monster_types)
+    handle_battle(monster_type, sg_godmode)
+    return
+
+
 #----------------------------------------------------------------------------
 #
 # In this function, we contian the gme control loop that will load the first
@@ -2551,6 +2583,12 @@ def game_start (sg_godmode):
 
         if (check_syntax (command_list) == True):
             parse_general(command_list)
+
+            # We need to add some random encounters into the later bathrooms
+            if (room > 25 and room < 49):
+                encounter_chance = randomlrandint(0,100)
+                if encounter_chance < 11:
+                    random_encounter()
 
 
             if room == 1:
