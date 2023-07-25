@@ -60,23 +60,25 @@ class Weapon:
 
     def swing (self):
         # We're going to de
+        elemental_damage = int(self.damage * (1+self.elemental_percentage))
         if self.elemental_type == 'fire':
-            return random.randint(0,self.damage * (1 + self.elemental_percentage)) +1
+
+            return random.randint(0, elemental_damage)
 
 
         if self.elemental_type == 'water':
-            return random.randint(0, self.damage * (1+ self.elemental_percentage)) + 1
+            return random.randint(0, elemental_damage)
 
 
         if self.elemental_type == 'air':
-            return random.randint(0,selff.damage * (1+ self.lemantal_percentage)) +1
+            return random.randint(0, elemental_damage)
 
 
         if self.elemental_type == 'earth':
-            return random.randint(0, self.damage * (1+ self.elemental_percentage)) +1
+            return random.randint(0, elemental_damage)
 
         if self.elemental_type == None:
-            return random.randint(0, self.damage) + 1
+            return random.randint(0, self.damage)
 
 
 #---------------------------------------------------------------------------------
@@ -233,7 +235,7 @@ def rat_battle (god_mode):
                 if hit_chance <= 75:
 
                     if player_One.equip == None:
-                        player_damage = random.randint(0,2)+1
+                        player_damage = random.randint(0,4)+1
                         rat_hp -= player_damage
                     else:
                         player_damage = knife.swing()
@@ -241,7 +243,7 @@ def rat_battle (god_mode):
                         rat_hp -= player_damage
                         hit_chance = random.randint(0,60)
                         if (hit_chance <= 60):
-                            rat_damage = random.randint(0,2)+ - player_Armor.value
+                            rat_damage = random.randint(0,2)+1 - player_Armor.value
                             print (f'The rat hits you for {rat_damage} points')
                             player_One.hitpoints -= rat_damage
                         else:
@@ -266,7 +268,7 @@ def rat_battle (god_mode):
                         if player_One.equip == None:
                             player_damage = random.randint(0,player_One.damage) + 1
                         else:
-                            player_damage = knife.swing()
+                            player_damage = random.randint(0,4)+1
 
                         print (f'You hit the rat with your {player_One.equip} for {player_damage}')
                         rat_hp -= player_damage
@@ -329,14 +331,24 @@ def search_area ():
                 if found == 0:
                     print ('You find a Glock 9mm.')
                     print ('You equip the gun.')
-                    player_One.equip = "gun"
+                    player_One.equip = 'gun'
                     return
 
                 if found == 1:
                     print ('You find a steel chestplate.')
                     print ('You equip the steel chestplate)')
+                    player_One.worn = 'steel'
                     return
 
+#------------------------------------------------------------------------------
+#
+# This is the final sreen of the game. I'm still not sure I want  to keep
+# it purely text based.
+#
+#-----------------------------------------------------------------------------
+def game_beaten ():
+
+    pass
 
 #------------------------------------------------------------------------------
 #
@@ -356,13 +368,14 @@ def handle_battle (monster_type, sg_godmode):
 
     #Monster Objects
     dog = Monster(3, 10, 2, 'water')
-    rabid = Monster(4, 12, 3, 'earth')
+    rabid = Monster(6, 12, 3, 'earth')
     rat = Monster (2,10,1, None)
-    father = Monster(6,16,4, 'fire')
+    father = Monster(10,16,4, 'fire')
 
     #Weapon Objects
-    knife = Weapon('slashing', 3, None, 0)
-    sword = Weapon('slashing', 6, x)
+    knife = Weapon('slashing', 5, None, 0)
+    sword = Weapon('slashing', 8, 'fire', .25)
+    gun   = Weapon ('piercing', 12, 'water', .25)
 
     global player_One
 
@@ -376,13 +389,21 @@ def handle_battle (monster_type, sg_godmode):
     if monster_type == 'dog':
         monster_hitpoints = dog.hitpoints
         monster_Armor  = dog.armor
+
+
     elif monster_type == 'rabid':
         monster_hitpoints = rabid.hitpoints
         monster_Armor = rabid.armor
+
+
     elif monster_type == 'rat':
         monster_hitpoints = rat.hitpoints
+        monster_Armor = rat.armor
+
+
     elif monster_type == 'father':
         monster_hitpoints = father.hitpoints
+        monster_Armor = rat.armor
 
     player_armor = 0
     player_armor = determine_Amor_Value (player_One)
@@ -412,6 +433,8 @@ def handle_battle (monster_type, sg_godmode):
                     player_damage = knife.swing() - monster_Armor
                 if player_One.equip == 'sword':
                     player_damage = sword.swing() - monster_Armor
+                if player_One.equip == 'gun':
+                    player_damage = gun.swing() - monster_Armor
 
                 if (player_damage > 0):
                     print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip}')
@@ -457,8 +480,7 @@ def handle_battle (monster_type, sg_godmode):
                 if player_One.equip == 'sword':
                     player_damage = sword.swing() - monster_Armor
                 if player_One.equip == 'gun':
-                    #player_damage = gun.swing      """ Yes, this iw rong """
-                    pass
+                    player_damage = gun.swing() - monster_Armor
                 if (player_damage > 0):
                     print (f'You hit the {monster_type} for {player_damage} with your {player_One.equip}')
                     monster_hitpoints -= player_damage
@@ -472,13 +494,15 @@ def handle_battle (monster_type, sg_godmode):
         if monster_hitpoints < 1:
             break
 
-
-    if (player_One.hitpoints < 1):
-        end_screen()
+        if (monster_type == 'father') and (monster_hitpoint < 1):
+            end_screen()
+        if (player_One.hitpoints < 1):
+            end_screen()
 
     if (monster_hitpoints < 1) and (monster_type == 'dog'):
         player_One.dog_beaten = True
-
+    if (monster_hitpoints <1) and (monster_type == 'rabid'):
+        player_One.rabid_beaten == True
 
 #------------------------------------------------------------------------------
 #
@@ -999,7 +1023,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
                 print ('There are obvious exits to the north, south, east, west')
                 return
 
-    if (gd_room >= 26) and (gd_room % 3 == 2):
+    if (gd_room >= 26) and (gd_room <= 48) and (gd_room % 3 == 2):
         print ('This appears to be a lab that someone kept meticulously')
         print ('clean at one point. It has since fallen into disuse')
         print ('and the shelves have gotten dusty.')
@@ -1032,7 +1056,25 @@ def display_room (gd_room, gd_inGame, sg_godmode):
 
 
     if gd_room == 50:
-        pass
+        print ('')
+        print ('The doors swing open briefly and shut behind you. ')
+        print ('')
+        print ('Your father stands before you. He looks ill, and you')
+        print ('think you see some foam at the mouth, but you cannot be')
+        print ('sure.')
+        print ('')
+        print ('He shoots something at you, and you feel a dart pierce')
+        print ('your skin.')
+        print ('')
+        input()
+        print ('I am sorry, daughter. The vaccine needs more than one dose.')
+        print ("This is the 3rd one, you will need at least ten more and")
+        print ("I have prepared it for you.")
+        print ("")
+        print ("It is too late for ...")
+        input()
+        print ('Your father snarls and attacks')
+        handle_battle('father', sg_godmode)
 
 
     return
@@ -2519,17 +2561,24 @@ def parse_room49 (fcommand_list):
 #
 #-----------------------------------------------------------------------------
 def parse_room50 (fcommand_list):
-    pass
+    global player_One
+    global room
+    palyer_One.room = room
+
+
 
 #----------------------------------------------------------------------------
 #  In rooms 26 through 48, the player has a chance to encounter a random
 # creature.
 #-----------------------------------------------------------------------------
-def random_encounter()
+def random_encounter(sg_godmode):
 
 
-    monster_types = ['rat', 'dob', 'rabid']
+    monster_types = ['rat', 'dog', 'rabid']
     monster_type = random.choice(monster_types)
+    print ('')
+    print (f'A {monster_type} appears before you and attacks.')
+    print ('')
     handle_battle(monster_type, sg_godmode)
     return
 
@@ -2586,9 +2635,9 @@ def game_start (sg_godmode):
 
             # We need to add some random encounters into the later bathrooms
             if (room > 25 and room < 49):
-                encounter_chance = randomlrandint(0,100)
+                encounter_chance = random.randint(0,100)
                 if encounter_chance < 11:
-                    random_encounter()
+                    random_encounter(sg_godmode)
 
 
             if room == 1:
