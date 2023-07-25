@@ -288,24 +288,6 @@ def rat_battle (god_mode):
             player_One.ratbeaten = True
             player_One.htipoints = 10
             return
-#------------------------------------------------------------------------------
-#
-# To elp compartmnetalize this further, we're just going to get an armor values
-#
-#------------------------------------------------------------------------------
-def determine_Amor_Value (fplayer_One):
-    global player_Armor
-
-    if player_One.worn == 'None':
-        player_Armor.value = 1
-    if fplayer_One.worn == 'cloth':
-        player_Armor.value = 2
-    if fplayer_One.worn == 'leather':
-        player_Armor.value = 3
-    if fplayer_One.worn == 'steel':
-        player_Armor.value = 4
-    if fplayer_One.worn == 'Kevlar':
-        player_Armor.value = 5
 
 #------------------------------------------------------------------------------
 #
@@ -316,6 +298,7 @@ def determine_Amor_Value (fplayer_One):
 #------------------------------------------------------------------------------
 def search_area ():
     global player_One
+    global player_Armor
     loot_chance = random.randint(0,10)
 
 
@@ -338,6 +321,7 @@ def search_area ():
                     print ('You find a steel chestplate.')
                     print ('You equip the steel chestplate)')
                     player_One.worn = 'steel'
+                    player_Armor.value = 4
                     return
 
 #------------------------------------------------------------------------------
@@ -348,7 +332,22 @@ def search_area ():
 #-----------------------------------------------------------------------------
 def game_beaten ():
 
-    pass
+    print ('')
+    print ('------------------------------------------------------------------')
+    print ('Your father falls down before you. A few seconds later, you know')
+    print ('that he has given up the ghost. You asked for none of this, and')
+    print ('your father deserved a better end. ')
+    print ('')
+    print ('You search his body and find notes on how to make his vaccine, ')
+    print ('and you know that you must find a way to manufacture it in bulk.')
+    print ('You decide to gather up waht yo ucan, scavenge gas, a vehicle,')
+    print ('food and other supplies to make a trip several hundred miles away.')
+    print ('The virus your fahter unleased spread quickly, but you know that')
+    print ('some people would not be affected and others would have natural')
+    print ('immunity. It is up to you and them not to repeat the mistakes')
+    print ('of the past.')
+    print ('------------------------------------------------------------------')
+    exit()
 
 #------------------------------------------------------------------------------
 #
@@ -368,9 +367,9 @@ def handle_battle (monster_type, sg_godmode):
 
     #Monster Objects
     dog = Monster(3, 10, 2, 'water')
-    rabid = Monster(6, 12, 3, 'earth')
-    rat = Monster (2,10,1, None)
-    father = Monster(10,16,4, 'fire')
+    rabid = Monster(7, 12, 3, 'earth')
+    rat = Monster (3,10,1, None)
+    father = Monster(15,30,4, 'fire')
 
     #Weapon Objects
     knife = Weapon('slashing', 5, None, 0)
@@ -403,17 +402,17 @@ def handle_battle (monster_type, sg_godmode):
 
     elif monster_type == 'father':
         monster_hitpoints = father.hitpoints
-        monster_Armor = rat.armor
+        monster_Armor = father.armor
 
-    player_armor = 0
-    player_armor = determine_Amor_Value (player_One)
     if (sg_godmode == True):
         print (f'The {monster_type} dies in the presence of an obvious god.')
         if (monster_type == 'dog'):
             player_One.dog_beaten = True
         if (monster_type == 'rabid'):
             player_One.rabid_beaten = True
-        return
+        if (monster_type == 'father'):
+            game_beaten()
+
 
 
     while (player_One.hitpoints > 0) or (monster_hitpoints > 0):
@@ -447,6 +446,13 @@ def handle_battle (monster_type, sg_godmode):
             if (monster_hit_chance <= 65):
                 if monster_type == 'dog':
                     monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+                if monster_type == 'rat':
+                    monster_damge = random.randint(0, rat.damage) + 1 - player_Armor.value
+                if monster_type == 'rabid':
+                    monster_damage = random.randint(0, rabid.damage) +1 - player_Armor.value
+                if player_damage == 'father':
+                     monster_damage = random.randint(0, father.damage) + 1 - player_Armor.value
+
 
                 if (monster_damage > 0):
                     print (f'The {monster_type} hits you for {monster_damage}')
@@ -460,8 +466,16 @@ def handle_battle (monster_type, sg_godmode):
             print (f'The {monster_type} wins initiative')
 
             if (monster_hit_chance <= 65):
-                if monster_type == 'dog':
-                    monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+                if (monster_hit_chance <= 65):
+                    if monster_type == 'dog':
+                        monster_damage = random.randint(0, dog.damage) + 1 - player_Armor.value
+                    if monster_type == 'rat':
+                        monster_damge = random.randint(0, rat.damage) + 1 - player_Armor.value
+                    if monster_type == 'rabid':
+                        monster_damage = random.randint(0, rabid.damage) +1 - player_Armor.value
+                    if player_damage == 'father':
+                         monster_damage = random.randint(0, father.damage) + 1 - player_Armor.value
+
 
                 if (monster_damage > 0):
                     print (f'The {monster_type} hits you for {monster_damage}')
@@ -494,8 +508,8 @@ def handle_battle (monster_type, sg_godmode):
         if monster_hitpoints < 1:
             break
 
-        if (monster_type == 'father') and (monster_hitpoint < 1):
-            end_screen()
+        if (monster_type == 'father') and (monster_hitpoints < 1):
+            game_beaten()
         if (player_One.hitpoints < 1):
             end_screen()
 
@@ -863,6 +877,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
             monster_type = 'dog'
             print('')
             handle_battle(monster_type, sg_godmode)
+
         print ('The are obvious exists to the east, west and to the south.')
         return
 
@@ -969,7 +984,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
 
     if gd_room == 23:
         print ('This is a side street that leads to a dead end. The trail you')
-        print ('saw at the convience store continues to amble from the wast.')
+        print ('saw at the convience store continues to amble from the west.')
         print ('You hear some growling sounds coming from the Northwest.')
         print ('')
         print ('You see obvious exits heading to the west and southeast.')
@@ -1016,7 +1031,7 @@ def display_room (gd_room, gd_inGame, sg_godmode):
              print ('There are obvious exits to the north, south, and east')
              return
          if (gd_room == 27):
-             print ('There are obvious exits to the north, south, and wast')
+             print ('There are obvious exits to the north, south, and west')
              return
          if (gd_room > 27) or (gd_room < 48):
             if (gd_room < 27) or (gd_room < 48):
@@ -1049,6 +1064,10 @@ def display_room (gd_room, gd_inGame, sg_godmode):
             print ('of kevlar body armor lying on one of the tables.  You can')
             print ('hear something that sounds like your father mumbling to')
             print ('himself off to the west.')
+            if player_One.worn != 'Kevlar':
+                print ('')
+                print ('You see a suit of kevlar body armor')
+                print ('')
             print ('')
             print ('There are obvious exists to the north and west.')
             return
@@ -2533,7 +2552,7 @@ def parse_room49 (fcommand_list):
     if (len(fcommand_list) == 2):
         if (fcommand_list[0] == 'equip') and (fcommand_list[1] == 'armor'):
             player_One.equip = 'Kevlar'
-            player_Armor.value = 14
+            player_Armor.value = 5
         if (fcommand_list[0] == 'equip') and (fcommand_list[1] == 'kevlar'):
             palyer_One.equip = "Kevlar"
         if (fcommand_list[0] == 'search') and (fcommand_list[1] == 'area'):
@@ -2563,7 +2582,8 @@ def parse_room49 (fcommand_list):
 def parse_room50 (fcommand_list):
     global player_One
     global room
-    palyer_One.room = room
+    player_One.room = room
+
 
 
 
